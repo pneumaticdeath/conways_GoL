@@ -7,8 +7,8 @@ import random
 import sys
 import time
 
-bg_color = 255, 255, 255
-cell_color = 0, 0, 127
+bg_color = 0, 0, 0
+cell_color = 0, 255, 0
 
 parser = argparse.ArgumentParser(sys.argv[0])
 parser.add_argument('--width', type=int, default=80, help='Initial width of game')
@@ -112,6 +112,7 @@ while game.getLiveCells() and (stagnation < args.stagnation or args.stagnation <
     game.step()
     if len(game.getLiveCells()) in live_cells_history:
         stagnation += 1
+        print('Stagnating')
     else:
         stagnation = 0
 
