@@ -16,7 +16,7 @@ parser.add_argument('--height', type=int, default=60, help='Initial height of ga
 parser.add_argument('--fill', type=int, default=40, help='Percentage fill of initial field')
 parser.add_argument('--window', default='800x600',  help='Dimensions of window')
 parser.add_argument('--delay', type=float, default=0.1, help='Delay in seconds between generation updates')
-parser.add_argument('--stagnation', type=int, default=10, help='Exit if no change in number of living cells for this many generations')
+parser.add_argument('--stagnation', type=int, default=10, help='Exit if stagnating for this many generations')
 parser.add_argument('--stagnation-window', type=int, default=3)
 parser.add_argument('--stagnation-threshold', type=float, default=0.95)
 
