@@ -18,6 +18,7 @@ parser.add_argument('--window', default='800x600',  help='Dimensions of window')
 parser.add_argument('--delay', type=float, default=0.1, help='Delay in seconds between generation updates')
 parser.add_argument('--stagnation', type=int, default=10, help='Exit if no change in number of living cells for this many generations')
 parser.add_argument('--stagnation-window', type=int, default=3)
+parser.add_argument('--stagnation-threshold', type=float, default=0.95)
 
 args = parser.parse_args()
 
@@ -101,7 +102,8 @@ def display(game):
 
 
 stagnation = 0
-live_cells_history = [len(game.getLiveCells())]
+live_cells_history = [game.getLiveCells()]
+num_cells_history = [len(game.getLiveCells())]
 
 while game.getLiveCells() and (stagnation < args.stagnation or args.stagnation < 1):
     for event in pygame.event.get():
@@ -110,15 +112,30 @@ while game.getLiveCells() and (stagnation < args.stagnation or args.stagnation <
 
     display(game)
     game.step()
-    if len(game.getLiveCells()) in live_cells_history:
+    stagnating = 0
+    curr_cells = game.getLiveCells()
+    for historical_cells in live_cells_history:
+        if len(curr_cells.intersection(historical_cells)) \
+                >= args.stagnation_threshold*len(curr_cells):
+            stagnating += 1
+            print("Similarity stagnation")
+
+    if len(curr_cells) in num_cells_history:
+        stagnating += 1
+
+    if stagnating > 0:
         stagnation += 1
-        print('Stagnating')
+        print('Stagnating {}'.format(stagnating))
     else:
         stagnation = 0
 
-    live_cells_history.append(len(game.getLiveCells()))
+    live_cells_history.append(curr_cells)
     if len(live_cells_history) > args.stagnation_window:
         live_cells_history = live_cells_history[-args.stagnation_window:]
+
+    num_cells_history.append(len(curr_cells))
+    if len(num_cells_history) > args.stagnation_window:
+        num_cells_history = num_cells_history[-args.stagnation_window:]
 
     time.sleep(args.delay)
 
