@@ -19,8 +19,12 @@ parser.add_argument('--delay', type=float, default=0.1, help='Delay in seconds b
 parser.add_argument('--stagnation', type=int, default=10, help='Exit if stagnating for this many generations')
 parser.add_argument('--stagnation-window', type=int, default=3)
 parser.add_argument('--stagnation-threshold', type=float, default=0.95)
+parser.add_argument('--random-seed', type=int, default=None, help="Seed the random number generator")
 
 args = parser.parse_args()
+
+if args.random_seed is not None:
+    random.seed(args.random_seed)
 
 delim = None
 for poss in (',', 'x'):
