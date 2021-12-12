@@ -58,22 +58,25 @@ pygame.init()
 
 window = pygame.display.set_mode(window_size)
 
-def display(game):
+def display(game, print_status=True):
     global bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y
     window_width, window_height = window_size
     window.fill(bg_color)
 
     min_x, min_y, max_x, max_y = game.getBoundingBox()
-    if min_x < bounding_min_x: bounding_min_x = min_x
-    if min_y < bounding_min_y: bounding_min_y = min_y
-    if max_x > bounding_max_x: bounding_max_x = max_x
-    if max_y > bounding_max_y: bounding_max_y = max_y
+
+    if min_x is not None:
+        if min_x < bounding_min_x: bounding_min_x = min_x
+        if min_y < bounding_min_y: bounding_min_y = min_y
+        if max_x > bounding_max_x: bounding_max_x = max_x
+        if max_y > bounding_max_y: bounding_max_y = max_y
 
     game_width = (bounding_max_x-bounding_min_x) + 1
     game_height = (bounding_max_y-bounding_min_y) + 1
 
-    scale = min(window_width/game_width, window_height/game_height)
-    print('Generation {}: scale: {} live cells: {}'.format(game.getGeneration(), scale, len(game.getLiveCells())))
+    scale = min(window_width/(game_width+1), window_height/(game_height+1))
+    if print_status:
+        print('Generation {}: scale: {} live cells: {}'.format(game.getGeneration(), scale, len(game.getLiveCells())))
     window_pixels = {}
 
     game_mid_x = int((bounding_max_x + bounding_min_x)/2)
@@ -109,40 +112,43 @@ stagnation = 0
 live_cells_history = [game.getLiveCells()]
 num_cells_history = [len(game.getLiveCells())]
 
-while game.getLiveCells() and (stagnation < args.stagnation or args.stagnation < 1):
+while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit(0)
 
-    display(game)
-    game.step()
-    stagnating = 0
-    curr_cells = game.getLiveCells()
-    for historical_cells in live_cells_history:
-        if len(curr_cells.intersection(historical_cells)) \
-                >= args.stagnation_threshold*len(curr_cells):
+
+    if game.getLiveCells() and (stagnation < args.stagnation or args.stagnation < 1):
+        display(game)
+        game.step()
+
+        stagnating = 0
+        curr_cells = game.getLiveCells()
+        for historical_cells in live_cells_history:
+            if len(curr_cells.intersection(historical_cells)) \
+                    >= args.stagnation_threshold*len(curr_cells):
+                stagnating += 1
+                print("Similarity stagnation")
+
+        if len(curr_cells) in num_cells_history:
+            print("Num cells stagnation")
             stagnating += 1
-            print("Similarity stagnation")
 
-    if len(curr_cells) in num_cells_history:
-        print("Num cells stagnation")
-        stagnating += 1
+        if stagnating > 0:
+            stagnation += 1
+        else:
+            stagnation = 0
 
-    if stagnating > 0:
-        stagnation += 1
+        live_cells_history.append(curr_cells)
+        if len(live_cells_history) > args.stagnation_window:
+            live_cells_history = live_cells_history[-args.stagnation_window:]
+
+        num_cells_history.append(len(curr_cells))
+        if len(num_cells_history) > args.stagnation_window:
+            num_cells_history = num_cells_history[-args.stagnation_window:]
     else:
-        stagnation = 0
-
-    live_cells_history.append(curr_cells)
-    if len(live_cells_history) > args.stagnation_window:
-        live_cells_history = live_cells_history[-args.stagnation_window:]
-
-    num_cells_history.append(len(curr_cells))
-    if len(num_cells_history) > args.stagnation_window:
-        num_cells_history = num_cells_history[-args.stagnation_window:]
+        cell_color = 255, 0, 0
+        display(game, False)
 
     time.sleep(args.delay)
 
-if game.getLiveCells():
-    print("Stagnation")
-    time.sleep(10)
