@@ -125,11 +125,11 @@ while game.getLiveCells() and (stagnation < args.stagnation or args.stagnation <
             print("Similarity stagnation")
 
     if len(curr_cells) in num_cells_history:
+        print("Num cells stagnation")
         stagnating += 1
 
     if stagnating > 0:
         stagnation += 1
-        print('Stagnating {}'.format(stagnating))
     else:
         stagnation = 0
 
