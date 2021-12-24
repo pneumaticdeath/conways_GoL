@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser(sys.argv[0])
 parser.add_argument('--width', type=int, default=80, help='Initial width of game')
 parser.add_argument('--height', type=int, default=60, help='Initial height of game')
 parser.add_argument('--fill', type=int, default=40, help='Percentage fill of initial field')
+parser.add_argument('--load', default=None, help='Optional file for initial pattern')
 parser.add_argument('--window', default='800x600',  help='Dimensions of window')
 parser.add_argument('--delay', type=float, default=0.1, help='Delay in seconds between generation updates')
 parser.add_argument('--stagnation', type=int, default=10, help='Exit if stagnating for this many generations')
@@ -44,10 +45,23 @@ except:
     sys.exit(1)
 
 initial_cells = set()
-for y in range(args.height):
-    for x in range(args.width):
-        if random.uniform(0,100) < args.fill:
-            initial_cells.add((x,y))
+if args.load is None:
+    for y in range(args.height):
+        for x in range(args.width):
+            if random.uniform(0,100) < args.fill:
+                initial_cells.add((x,y))
+else:
+    with open(args.load, "r") as f:
+        y = 0
+        for l in f.readlines():
+            x = 0
+            for c in l:
+                if c == '#': # we've hit a comment
+                    break;
+                elif not c.isspace():
+                    initial_cells.add((x,y))
+                x += 1
+            y += 1
 
 game = life.Life(initial_cells)
 
