@@ -1,0 +1,13 @@
+# The Gosper glider gun
+#   Discovered by Bill Gosper in November 1970
+#   The first known infinitely growing pattern
+
+                        B
+                      B B         
+            AA      BB            **
+           A   A    BB            **
+**        A     A   BB
+**        A   A AA    B B
+          A     A       B
+           A   A
+            AA
