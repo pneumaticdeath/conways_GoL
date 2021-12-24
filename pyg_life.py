@@ -153,6 +153,9 @@ while True:
                 zoom(zoom_factor)
             elif event.key == pygame.K_p:
                 pause = not pause
+            elif event.key == pygame.K_c:
+                cell_color = 0, 255, 0
+                stagnation = 0
             elif event.key == pygame.K_UP:
                 bounding_min_y, bounding_max_y = shift(bounding_min_y, bounding_max_y, -shift_factor)
             elif event.key == pygame.K_DOWN:
