@@ -76,6 +76,7 @@ else:
             y += 1
 
 game = life.Life(initial_cells)
+last_frame_time = time.time()
 
 bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y = game.getBoundingBox()
 print('{}, {}, {}, {}'.format(bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y))
@@ -94,11 +95,15 @@ def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=T
     disp_width = (disp_max_x - disp_min_x) + 1
     disp_height = (disp_max_y - disp_min_y) + 1
 
+    global last_frame_time
+
     scale = min(window_width / (disp_width + 1), window_height / (disp_height + 1))
     if print_status:
-        print('Generation {}: scale: {} live cells: {}'.format(game.getGeneration(),
-                                                               scale,
-                                                               len(game.getLiveCells())))
+        print('Generation {}: scale: {} live cells: {} step time: {}'
+              .format(game.getGeneration(),
+                      scale,
+                      len(game.getLiveCells()),
+                      time.time() - last_frame_time))
     window_pixels = {}
 
     disp_mid_x = int((disp_max_x + disp_min_x) / 2)
@@ -127,6 +132,7 @@ def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=T
                            for c in range(3)])
             pygame.draw.circle(window, color, coord, 1)
 
+    last_frame_time = time.time()
     pygame.display.flip()
 
 
@@ -196,8 +202,10 @@ while True:
                 stagnation = 0
             elif event.key == pygame.K_f:
                 delay_time /= speed_factor
+                print('Delay now {0} seconds'.format(delay_time))
             elif event.key == pygame.K_s:
                 delay_time *= speed_factor
+                print('Delay now {0} seconds'.format(delay_time))
             elif event.key == pygame.K_RETURN:
                 pygame.display.toggle_fullscreen()
             elif event.key == pygame.K_UP:
