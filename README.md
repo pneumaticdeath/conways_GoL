@@ -3,7 +3,7 @@
 For the pygame version (pyg_life.py) there are the following command line options:
 ```
 usage: ./pyg_life.py [-h] [--width WIDTH] [--height HEIGHT] [--fill FILL] [--load LOAD] [--window WINDOW] [--fullscreen]
-                     [--delay DELAY] [--stagnation STAGNATION] [--stagnation-window STAGNATION_WINDOW]
+                     [--paused] [--delay DELAY] [--stagnation STAGNATION] [--stagnation-window STAGNATION_WINDOW]
                      [--similarity-threshold SIMILARITY_THRESHOLD] [--random-seed RANDOM_SEED]
 
 options:
@@ -14,6 +14,7 @@ options:
   --load LOAD           Optional file for initial pattern
   --window WINDOW       Dimensions of window
   --fullscreen          display in full screen
+  --paused              start the game paused
   --delay DELAY         Delay in seconds between generation updates
   --stagnation STAGNATION
                         Exit if stagnating for this many generations
@@ -25,7 +26,7 @@ options:
 
 And in the game you can use the following keys to control the display:
 
-* P - Pause the game
+* P - Toggle whether the game is paused
 * Z - Toggle auto-zoom
 * C - Continue after auto-pause
 * I - Zoom in
