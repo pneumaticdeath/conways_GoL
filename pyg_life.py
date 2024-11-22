@@ -21,6 +21,8 @@ parser.add_argument('--load', default=None,
                     help='Optional file for initial pattern')
 parser.add_argument('--window', default='800x600',
                     help='Dimensions of window')
+parser.add_argument('--fullscreen', action='store_true',
+                    help='display in full screen')
 parser.add_argument('--delay', type=float, default=0.1,
                     help='Delay in seconds between generation updates')
 parser.add_argument('--stagnation', type=int, default=10,
@@ -79,6 +81,8 @@ print('{}, {}, {}, {}'.format(bounding_min_x, bounding_min_y, bounding_max_x, bo
 pygame.init()
 
 window = pygame.display.set_mode(window_size)
+if args.fullscreen:
+    pygame.display.toggle_fullscreen()
 
 
 def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=True):
@@ -192,6 +196,8 @@ while True:
                 delay_time /= speed_factor
             elif event.key == pygame.K_s:
                 delay_time *= speed_factor
+            elif event.key == pygame.K_RETURN:
+                pygame.display.toggle_fullscreen()
             elif event.key == pygame.K_UP:
                 bounding_min_y, bounding_max_y = shift(bounding_min_y, bounding_max_y, -shift_factor)
             elif event.key == pygame.K_DOWN:
