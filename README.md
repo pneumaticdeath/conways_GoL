@@ -24,10 +24,10 @@ options:
 
 And in the game you can use the following keys to control the display:
 
-*P  Pause the game
-*Z  Toggle auto-zoom
-*C  Continue after auto-pause
-*I  Zoom in
-*O  Zoom out
-*Q  Quit game
-*Arrow Keys  Scroll around the playfield
+* P  Pause the game
+* Z  Toggle auto-zoom
+* C  Continue after auto-pause
+* I  Zoom in
+* O  Zoom out
+* Q  Quit game
+* Arrow Keys  Scroll around the playfield
