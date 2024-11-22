@@ -82,7 +82,7 @@ print('{}, {}, {}, {}'.format(bounding_min_x, bounding_min_y, bounding_max_x, bo
 
 pygame.init()
 
-window = pygame.display.set_mode(window_size)
+window = pygame.display.set_mode(window_size, flags=pygame.RESIZABLE)
 if args.fullscreen:
     pygame.display.toggle_fullscreen()
 
@@ -211,6 +211,8 @@ while True:
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_q:
                 sys.exit(0)
+        elif event.type == pygame.VIDEORESIZE:
+            window_size = event.size
 
     min_x, min_y, max_x, max_y = game.getBoundingBox()
 
