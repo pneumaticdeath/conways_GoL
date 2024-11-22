@@ -122,6 +122,9 @@ pause = False
 
 zoom_factor = 1.1
 shift_factor = 0.1
+speed_factor = 1.5
+
+delay_time = args.delay
 
 def shift(min_v, max_v, factor):
     spread = max_v - min_v
@@ -170,6 +173,10 @@ while True:
             elif event.key == pygame.K_c:
                 cell_color = 0, 255, 0
                 stagnation = 0
+            elif event.key == pygame.K_f:
+                delay_time /= speed_factor
+            elif event.key == pygame.K_s:
+                delay_time *= speed_factor
             elif event.key == pygame.K_UP:
                 bounding_min_y, bounding_max_y = shift(bounding_min_y, bounding_max_y, -shift_factor)
             elif event.key == pygame.K_DOWN:
@@ -226,5 +233,5 @@ while True:
         cell_color = 255, 0, 0
         display(game, bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y, False)
 
-    time.sleep(args.delay)
+    time.sleep(delay_time)
 

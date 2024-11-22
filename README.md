@@ -29,5 +29,7 @@ And in the game you can use the following keys to control the display:
 * C - Continue after auto-pause
 * I - Zoom in
 * O - Zoom out
+* F - Run faster
+* S - Run Slower
 * Q - Quit game
 * Arrow Keys - Scroll around the playfield
