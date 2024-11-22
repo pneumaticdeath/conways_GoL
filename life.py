@@ -2,6 +2,7 @@
 
 import sys
 
+
 class Life(object):
     def __init__(self, live_cells=None):
         self._live = set()
@@ -20,10 +21,10 @@ class Life(object):
 
     def neighbors(self, cell):
         x, y = cell
-        for dy in range(-1,2):
-            for dx in range(-1,2):
-                if dx != 0 or dy !=0:
-                    yield (x+dx, y+dy)
+        for dy in range(-1, 2):
+            for dx in range(-1, 2):
+                if dx != 0 or dy != 0:
+                    yield (x + dx, y + dy)
 
     def countNeighbors(self, cell):
         count = 0
@@ -40,13 +41,13 @@ class Life(object):
 
     def step(self):
         next_gen = set()
-        cells_of_concern = set(self._live) # make a copy of current live cells
+        cells_of_concern = set(self._live)  # make a copy of current live cells
         for cell in self._live:
             for neighbor in self.neighbors(cell):
                 cells_of_concern.add(neighbor)
         for cell in cells_of_concern:
             n = self.countNeighbors(cell)
-            if cell in self._live and n in [2,3]:
+            if cell in self._live and n in [2, 3]:
                 next_gen.add(cell)
             elif n == 3:
                 next_gen.add(cell)
@@ -65,7 +66,6 @@ class Life(object):
             if max_y is None or y > max_y:
                 max_y = y
         return min_x, min_y, max_x, max_y
-
 
 
 if __name__ == '__main__':
@@ -96,18 +96,18 @@ if __name__ == '__main__':
     for y in range(size_y):
         for x in range(size_x):
             if random.uniform(0, 100) <= args.fill:
-                initial_gen.add((x,y))
+                initial_gen.add((x, y))
 
     def display(game):
         min_x, min_y, max_x, max_y = game.getBoundingBox()
 
         print('({}, {}) -> ({}, {})'.format(min_x, min_y, max_x, max_y))
-        print('+{}+'.format('-'*(2*(max_x-min_x)+1)))
+        print('+{}+'.format('-' * (2 * (max_x - min_x) + 1)))
         cells = game.getLiveCells()
-        for y in range(min_y, max_y+1):
-            line = ' '.join(['*' if (x,y) in cells else ' ' for x in range(min_x, max_x+1)])
+        for y in range(min_y, max_y + 1):
+            line = ' '.join(['*' if (x, y) in cells else ' ' for x in range(min_x, max_x + 1)])
             print('|{}|'.format(line))
-        print('+{}+'.format('-'*(2*(max_x-min_x)+1)))
+        print('+{}+'.format('-' * (2 * (max_x - min_x) + 1)))
 
     life = Life(initial_gen)
     cells = life.getLiveCells()
