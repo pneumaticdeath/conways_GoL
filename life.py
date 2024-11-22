@@ -74,9 +74,12 @@ if __name__ == '__main__':
     import time
 
     parser = argparse.ArgumentParser('life')
-    parser.add_argument('--size', default="30,30", help="Initial size of grid, default 30,30")
-    parser.add_argument('--fill', type=int, default=50, help="percent of initial cells to be filled between 0 and 100")
-    parser.add_argument('--delay', type=float, default=0.5, help="Delay in seconds after every generation")
+    parser.add_argument('--size', default="30,30",
+                        help="Initial size of grid, default 30,30")
+    parser.add_argument('--fill', type=int, default=50,
+                        help="percent of initial cells to be filled between 0 and 100")
+    parser.add_argument('--delay', type=float, default=0.5,
+                        help="Delay in seconds after every generation")
 
     args = parser.parse_args()
 

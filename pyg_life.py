@@ -11,16 +11,24 @@ bg_color = 0, 0, 0
 cell_color = 0, 255, 0
 
 parser = argparse.ArgumentParser(sys.argv[0])
-parser.add_argument('--width', type=int, default=80, help='Initial width of game')
-parser.add_argument('--height', type=int, default=60, help='Initial height of game')
-parser.add_argument('--fill', type=int, default=40, help='Percentage fill of initial field')
-parser.add_argument('--load', default=None, help='Optional file for initial pattern')
-parser.add_argument('--window', default='800x600', help='Dimensions of window')
-parser.add_argument('--delay', type=float, default=0.1, help='Delay in seconds between generation updates')
-parser.add_argument('--stagnation', type=int, default=10, help='Exit if stagnating for this many generations')
+parser.add_argument('--width', type=int, default=80,
+                    help='Initial width of game')
+parser.add_argument('--height', type=int, default=60,
+                    help='Initial height of game')
+parser.add_argument('--fill', type=int, default=40,
+                    help='Percentage fill of initial field')
+parser.add_argument('--load', default=None,
+                    help='Optional file for initial pattern')
+parser.add_argument('--window', default='800x600',
+                    help='Dimensions of window')
+parser.add_argument('--delay', type=float, default=0.1,
+                    help='Delay in seconds between generation updates')
+parser.add_argument('--stagnation', type=int, default=10,
+                    help='Exit if stagnating for this many generations')
 parser.add_argument('--stagnation-window', type=int, default=3)
 parser.add_argument('--similarity-threshold', type=float, default=0.95)
-parser.add_argument('--random-seed', type=int, default=None, help="Seed the random number generator")
+parser.add_argument('--random-seed', type=int, default=None,
+                    help="Seed the random number generator")
 
 args = parser.parse_args()
 
@@ -82,7 +90,9 @@ def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=T
 
     scale = min(window_width / (disp_width + 1), window_height / (disp_height + 1))
     if print_status:
-        print('Generation {}: scale: {} live cells: {}'.format(game.getGeneration(), scale, len(game.getLiveCells())))
+        print('Generation {}: scale: {} live cells: {}'.format(game.getGeneration(),
+                                                               scale,
+                                                               len(game.getLiveCells())))
     window_pixels = {}
 
     disp_mid_x = int((disp_max_x + disp_min_x) / 2)
@@ -107,7 +117,8 @@ def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=T
     if scale <= 2:
         max_dens = max([d for d in window_pixels.values()])
         for coord, d in window_pixels.items():
-            color = tuple([int((bg_color[c] * (max_dens - d) + cell_color[c] * d) / max_dens) for c in range(3)])
+            color = tuple([int((bg_color[c] * (max_dens - d) + cell_color[c] * d) / max_dens)
+                           for c in range(3)])
             pygame.draw.circle(window, color, coord, 1)
 
     pygame.display.flip()
