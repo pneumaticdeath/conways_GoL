@@ -13,8 +13,8 @@ options:
   --fill FILL           Percentage fill of initial field
   --load LOAD           Optional file for initial pattern
   --window WINDOW       Dimensions of window
-  --fullscreen          display in full screen
-  --paused              start the game paused
+  --fullscreen          Display in full screen
+  --paused              Start the game paused
   --delay DELAY         Delay in seconds between generation updates
   --stagnation STAGNATION
                         Exit if stagnating for this many generations

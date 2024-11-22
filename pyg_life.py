@@ -22,9 +22,9 @@ parser.add_argument('--load', default=None,
 parser.add_argument('--window', default='800x600',
                     help='Dimensions of window')
 parser.add_argument('--fullscreen', action='store_true',
-                    help='display in full screen')
+                    help='Display in full screen')
 parser.add_argument('--paused', action='store_true',
-                    help='start the game paused')
+                    help='Start the game paused')
 parser.add_argument('--delay', type=float, default=0.1,
                     help='Delay in seconds between generation updates')
 parser.add_argument('--stagnation', type=int, default=10,
