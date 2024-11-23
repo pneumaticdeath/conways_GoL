@@ -65,7 +65,7 @@ if args.load is None:
 else:
     with open(args.load, "r") as f:
         y = 0
-        for line in f.readlines():
+        for line in f:
             x = 0
             for c in line:
                 if c == '#':  # we've hit a comment
