@@ -80,6 +80,7 @@ if __name__ == '__main__':
                         help="percent of initial cells to be filled between 0 and 100")
     parser.add_argument('--delay', type=float, default=0.5,
                         help="Delay in seconds after every generation")
+    parser.add_argument('--load', help='Load initital state from a file')
 
     args = parser.parse_args()
 
@@ -93,13 +94,25 @@ if __name__ == '__main__':
         parser.usage()
         sys.exit(1)
 
-    size_x, size_y = [int(n) for n in args.size.split(delim)]
-
     initial_gen = set()
-    for y in range(size_y):
-        for x in range(size_x):
-            if random.uniform(0, 100) <= args.fill:
-                initial_gen.add((x, y))
+    if args.load is None:
+        size_x, size_y = [int(n) for n in args.size.split(delim)]
+        for y in range(size_y):
+            for x in range(size_x):
+                if random.uniform(0, 100) <= args.fill:
+                    initial_gen.add((x, y))
+    else:
+        with open(args.load, 'r') as f:
+            y = 0
+            for line in f:
+                x = 0
+                for char in line:
+                    if char == '#':
+                        break
+                    elif not char.isspace():
+                        initial_gen.add((x, y))
+                    x += 1
+                y += 1
 
     def display(game):
         min_x, min_y, max_x, max_y = game.getBoundingBox()
