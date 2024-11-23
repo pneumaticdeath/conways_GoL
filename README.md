@@ -28,7 +28,7 @@ And in the game you can use the following keys to control the display:
 
 * P - Toggle whether the game is paused
 * Z - Toggle auto-zoom
-* C - Continue after auto-pause
+* C - Continue after stagnation pause
 * I - Zoom in
 * O - Zoom out
 * F - Run faster
