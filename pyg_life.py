@@ -142,6 +142,7 @@ num_cells_history = [len(game.getLiveCells())]
 
 zoom_pause = False
 pause = args.paused
+take_step = False
 
 zoom_factor = 1.1
 shift_factor = 0.1
@@ -206,6 +207,9 @@ while True:
             elif event.key == pygame.K_s:
                 delay_time *= speed_factor
                 print('Delay now {0} seconds'.format(delay_time))
+            elif event.key == pygame.K_SPACE:
+                take_step = True
+                pause = True
             elif event.key == pygame.K_RETURN:
                 pygame.display.toggle_fullscreen()
             elif event.key == pygame.K_UP:
@@ -234,10 +238,11 @@ while True:
         if max_y > bounding_max_y:
             bounding_max_y = max_y
 
-    if game.getLiveCells() and (stagnation < args.stagnation or args.stagnation < 1):
+    if take_step or game.getLiveCells() and (stagnation < args.stagnation or args.stagnation < 1):
         display(game, bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y, not pause)
-        if not pause:
+        if take_step or not pause:
             game.step()
+            take_step = False
 
             stagnating = 0
             curr_cells = game.getLiveCells()
@@ -246,6 +251,7 @@ while True:
                         >= args.similarity_threshold * len(curr_cells):
                     stagnating += 1
                     print("Stagnating on similarity")
+                    break
 
             if len(curr_cells) in num_cells_history:
                 print("Stagnating on population")

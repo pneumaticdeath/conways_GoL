@@ -34,5 +34,6 @@ And in the game you can use the following keys to control the display:
 * F - Run faster
 * S - Run Slower
 * Q - Quit game
+* SPACE - Take a single step
 * RETURN - toggle full screen display
 * Arrow Keys - Scroll around the playfield
