@@ -246,7 +246,7 @@ while True:
         else:
             cell_color = 0, 255, 0
 
-        display(game, bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y, not pause)
+        display(game, bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y, take_step or not pause)
         if take_step or not pause:
             game.step()
             take_step = False
