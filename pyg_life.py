@@ -208,8 +208,10 @@ while True:
                 delay_time *= speed_factor
                 print('Delay now {0} seconds'.format(delay_time))
             elif event.key == pygame.K_SPACE:
-                take_step = True
-                pause = True
+                if pause:
+                    take_step = True
+                else:
+                    pause = True
             elif event.key == pygame.K_RETURN:
                 pygame.display.toggle_fullscreen()
             elif event.key == pygame.K_UP:
@@ -239,6 +241,11 @@ while True:
             bounding_max_y = max_y
 
     if take_step or game.getLiveCells() and (stagnation < args.stagnation or args.stagnation < 1):
+        if pause:
+            cell_color = 0, 0, 255
+        else:
+            cell_color = 0, 255, 0
+
         display(game, bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y, not pause)
         if take_step or not pause:
             game.step()
