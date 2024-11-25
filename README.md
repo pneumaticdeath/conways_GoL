@@ -17,7 +17,7 @@ options:
   --paused              Start the game paused
   --delay DELAY         Delay in seconds between generation updates
   --stagnation STAGNATION
-                        Exit if stagnating for this many generations
+                        Stop if stagnated for this many generations
   --stagnation-window STAGNATION_WINDOW
   --similarity-threshold SIMILARITY_THRESHOLD
   --random-seed RANDOM_SEED

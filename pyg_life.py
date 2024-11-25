@@ -28,7 +28,7 @@ parser.add_argument('--paused', action='store_true',
 parser.add_argument('--delay', type=float, default=0.1,
                     help='Delay in seconds between generation updates')
 parser.add_argument('--stagnation', type=int, default=10,
-                    help='Exit if stagnating for this many generations')
+                    help='Stop if stagnated for this many generations')
 parser.add_argument('--stagnation-window', type=int, default=3)
 parser.add_argument('--similarity-threshold', type=float, default=0.95)
 parser.add_argument('--random-seed', type=int, default=None,
