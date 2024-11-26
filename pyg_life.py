@@ -147,6 +147,7 @@ take_step = False
 zoom_factor = 1.1
 shift_factor = 0.1
 speed_factor = 1.5
+stagnated = False
 
 delay_time = args.delay
 
@@ -200,7 +201,9 @@ while True:
                 pause = not pause
             elif event.key == pygame.K_c:
                 cell_color = 0, 255, 0
-                stagnation = 0
+                stagnated = False
+                live_cells_history = live_cells_history[-1:]
+                num_cells_history = num_cells_history[-1:]
             elif event.key == pygame.K_f:
                 delay_time /= speed_factor
                 print('Delay now {0} seconds'.format(delay_time))
@@ -208,7 +211,7 @@ while True:
                 delay_time *= speed_factor
                 print('Delay now {0} seconds'.format(delay_time))
             elif event.key == pygame.K_SPACE:
-                if pause:
+                if pause or stagnated:
                     take_step = True
                 else:
                     pause = True
@@ -240,7 +243,7 @@ while True:
         if max_y > bounding_max_y:
             bounding_max_y = max_y
 
-    if take_step or game.getLiveCells() and (stagnation < args.stagnation or args.stagnation < 1):
+    if take_step or game.getLiveCells() and not stagnated:
         if pause:
             cell_color = 0, 0, 255
         else:
@@ -254,7 +257,12 @@ while True:
             stagnating = 0
             curr_cells = game.getLiveCells()
             for historical_cells in live_cells_history:
-                if len(curr_cells.intersection(historical_cells)) \
+                if curr_cells == historical_cells:
+                    # We've seen this exact pattern before so we're in a loop
+                    stagnating += 1
+                    print("Stagnated due to loop at {}".format(game.getGeneration()))
+                    stagnated = True
+                elif len(curr_cells.intersection(historical_cells)) \
                         >= args.similarity_threshold * len(curr_cells):
                     stagnating += 1
                     print("Stagnating on similarity")
@@ -268,7 +276,7 @@ while True:
                 stagnation += 1
                 if args.stagnation > 0 and stagnation >= args.stagnation:
                     print("Stagnated at {}".format(game.getGeneration() - args.stagnation))
-
+                    stagnated = True
             else:
                 stagnation = 0
 
