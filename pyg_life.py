@@ -29,7 +29,6 @@ parser.add_argument('--delay', type=float, default=0.1,
                     help='Delay in seconds between generation updates')
 parser.add_argument('--stagnation', type=int, default=10,
                     help='Stop if stagnated for this many generations')
-parser.add_argument('--stagnation-window', type=int, default=3)
 parser.add_argument('--similarity-threshold', type=float, default=0.95)
 parser.add_argument('--random-seed', type=int, default=None,
                     help="Seed the random number generator")
@@ -138,7 +137,6 @@ def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=T
 
 stagnation = 0
 live_cells_history = [game.getLiveCells()]
-num_cells_history = [len(game.getLiveCells())]
 
 zoom_pause = False
 pause = args.paused
@@ -202,8 +200,8 @@ while True:
             elif event.key == pygame.K_c:
                 cell_color = 0, 255, 0
                 stagnated = False
+                stagnation = 0
                 live_cells_history = live_cells_history[-1:]
-                num_cells_history = num_cells_history[-1:]
             elif event.key == pygame.K_f:
                 delay_time /= speed_factor
                 print('Delay now {0} seconds'.format(delay_time))
@@ -260,17 +258,18 @@ while True:
                 if curr_cells == historical_cells:
                     # We've seen this exact pattern before so we're in a loop
                     stagnating += 1
-                    print("Stagnated due to loop at {}".format(game.getGeneration()))
                     stagnated = True
+                    print("Stagnated due to loop at {}".format(game.getGeneration()))
+                    break
+                elif len(curr_cells) == len(historical_cells):
+                    print("Stagnating on population")
+                    stagnating += 1
+                    break
                 elif len(curr_cells.intersection(historical_cells)) \
                         >= args.similarity_threshold * len(curr_cells):
                     stagnating += 1
                     print("Stagnating on similarity")
                     break
-
-            if len(curr_cells) in num_cells_history:
-                print("Stagnating on population")
-                stagnating += 1
 
             if stagnating > 0:
                 stagnation += 1
@@ -281,12 +280,9 @@ while True:
                 stagnation = 0
 
             live_cells_history.append(curr_cells)
-            if len(live_cells_history) > args.stagnation_window:
-                live_cells_history = live_cells_history[-args.stagnation_window:]
+            if len(live_cells_history) > args.stagnation:
+                live_cells_history = live_cells_history[-args.stagnation:]
 
-            num_cells_history.append(len(curr_cells))
-            if len(num_cells_history) > args.stagnation_window:
-                num_cells_history = num_cells_history[-args.stagnation_window:]
     else:
         cell_color = 255, 0, 0
         display(game, bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y, False)
