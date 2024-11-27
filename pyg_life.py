@@ -36,7 +36,11 @@ parser.add_argument('--random-seed', type=int, default=None,
 args = parser.parse_args()
 
 if args.random_seed is not None:
-    random.seed(args.random_seed)
+    rand_seed = args.random_seed
+else:
+    rand_seed = random.randint(0, 2 ** 32)
+    print('Using random seed {}'.format(rand_seed))
+random.seed(rand_seed)
 
 delim = None
 for poss in (',', 'x'):
@@ -190,8 +194,7 @@ def dump():
             outfile.write('# Loaded from "{}"\n'.format(args.load))
         else:
             outfile.write('# Height: {}   Width: {}   Fill: {}\n'.format(args.height, args.width, args.fill))
-            if args.random_seed:
-                outfile.write('# Random Seed: {}\n'.format(args.random_seed))
+            outfile.write('# Random Seed: {}\n'.format(rand_seed))
         outfile.write('# Generation: {}   Stagnation: {}\n'.format(game.getGeneration(), args.stagnation))
         mix_x, min_y, max_x, max_y = game.getBoundingBox()
         cells = game.getLiveCells()
