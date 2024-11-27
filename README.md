@@ -3,8 +3,8 @@
 For the pygame version (pyg_life.py) there are the following command line options:
 ```
 usage: ./pyg_life.py [-h] [--width WIDTH] [--height HEIGHT] [--fill FILL] [--load LOAD] [--window WINDOW] [--fullscreen]
-                     [--paused] [--delay DELAY] [--stagnation STAGNATION] [--stagnation-window STAGNATION_WINDOW]
-                     [--similarity-threshold SIMILARITY_THRESHOLD] [--random-seed RANDOM_SEED]
+                     [--paused] [--delay DELAY] [--stagnation STAGNATION] [--similarity-threshold SIMILARITY_THRESHOLD]
+                     [--random-seed RANDOM_SEED]
 
 options:
   -h, --help            show this help message and exit
@@ -18,7 +18,6 @@ options:
   --delay DELAY         Delay in seconds between generation updates
   --stagnation STAGNATION
                         Stop if stagnated for this many generations
-  --stagnation-window STAGNATION_WINDOW
   --similarity-threshold SIMILARITY_THRESHOLD
   --random-seed RANDOM_SEED
                         Seed the random number generator
@@ -33,6 +32,7 @@ And in the game you can use the following keys to control the display:
 * O - Zoom out
 * F - Run faster
 * S - Run Slower
+* D - Dump current pattern to save file
 * Q - Quit game
 * SPACE - Take a single step
 * RETURN - toggle full screen display

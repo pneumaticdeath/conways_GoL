@@ -182,6 +182,25 @@ def zoom(factor):
     bounding_min_y, bounding_max_y = scale(bounding_min_y, bounding_max_y, factor)
 
 
+def dump():
+    filename = time.strftime('dump_%Y%m%d-%H%M%S.life')
+    print('Dumping to {}'.format(filename))
+    with open(filename, 'w') as outfile:
+        if args.load:
+            outfile.write('# Loaded from "{}"\n'.format(args.load))
+        else:
+            outfile.write('# Height: {}   Width: {}   Fill: {}\n'.format(args.height, args.width, args.fill))
+            if args.random_seed:
+                outfile.write('# Random Seed: {}\n'.format(args.random_seed))
+        outfile.write('# Generation: {}   Stagnation: {}\n'.format(game.getGeneration(), args.stagnation))
+        mix_x, min_y, max_x, max_y = game.getBoundingBox()
+        cells = game.getLiveCells()
+        for y in range(min_y, max_y + 1):
+            for x in range(min_x, max_x + 1):
+                outfile.write('*' if (x, y) in cells else ' ')
+            outfile.write('\n')
+
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -208,6 +227,8 @@ while True:
             elif event.key == pygame.K_s:
                 delay_time *= speed_factor
                 print('Delay now {0} seconds'.format(delay_time))
+            elif event.key == pygame.K_d:
+                dump()
             elif event.key == pygame.K_SPACE:
                 if pause or stagnated:
                     take_step = True
