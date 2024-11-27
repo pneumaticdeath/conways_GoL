@@ -197,6 +197,7 @@ def dump():
             outfile.write('# Random Seed: {}\n'.format(rand_seed))
         outfile.write('# Generation: {}   Stagnation: {}\n'.format(game.getGeneration(), args.stagnation))
         mix_x, min_y, max_x, max_y = game.getBoundingBox()
+        outfile.write('# Bounding box ({}, {}) -> ({}, {})\n'.format(mix_x, min_y, max_x, max_y))
         cells = game.getLiveCells()
         for y in range(min_y, max_y + 1):
             for x in range(min_x, max_x + 1):
