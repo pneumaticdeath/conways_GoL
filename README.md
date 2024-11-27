@@ -30,6 +30,7 @@ And in the game you can use the following keys to control the display:
 * C - Continue after stagnation pause
 * I - Zoom in
 * O - Zoom out
+* B - Step backwards in time
 * F - Run faster
 * S - Run Slower
 * D - Dump current pattern to save file

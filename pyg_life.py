@@ -140,7 +140,6 @@ def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=T
 
 
 stagnation = 0
-live_cells_history = [game.getLiveCells()]
 
 zoom_pause = False
 pause = args.paused
@@ -224,7 +223,9 @@ while True:
                 cell_color = 0, 255, 0
                 stagnated = False
                 stagnation = 0
-                live_cells_history = live_cells_history[-1:]
+            elif event.key == pygame.K_b:
+                pause = True
+                game.backwardsStep()
             elif event.key == pygame.K_f:
                 delay_time /= speed_factor
                 print('Delay now {0} seconds'.format(delay_time))
@@ -279,7 +280,7 @@ while True:
 
             stagnating = 0
             curr_cells = game.getLiveCells()
-            for historical_cells in live_cells_history:
+            for historical_cells in game.getHistory()[-args.stagnation:]:
                 if curr_cells == historical_cells:
                     # We've seen this exact pattern before so we're in a loop
                     stagnating += 1
@@ -301,10 +302,6 @@ while True:
                     stagnated = True
             else:
                 stagnation = 0
-
-            live_cells_history.append(curr_cells)
-            if len(live_cells_history) > args.stagnation:
-                live_cells_history = live_cells_history[-args.stagnation:]
 
     else:
         cell_color = 255, 0, 0

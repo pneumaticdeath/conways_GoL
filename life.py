@@ -6,6 +6,7 @@ import sys
 class Life(object):
     def __init__(self, live_cells=None):
         self._live = set()
+        self._history = []
         self._gen_counter = 0
         if live_cells is not None:
             self.addLiveCells(live_cells)
@@ -18,6 +19,9 @@ class Life(object):
         for cell in cells:
             if cell in self._live:
                 self._live.remove(cell)
+
+    def clearLiveCells(self):
+        self._live = set()
 
     def neighbors(self, cell):
         x, y = cell
@@ -36,6 +40,9 @@ class Life(object):
     def getLiveCells(self):
         return self._live
 
+    def getHistory(self):
+        return self._history
+
     def getGeneration(self):
         return self._gen_counter
 
@@ -51,8 +58,14 @@ class Life(object):
                 next_gen.add(cell)
             elif n == 3:
                 next_gen.add(cell)
+        self._history.append(self._live)
         self._live = next_gen
         self._gen_counter += 1
+
+    def backwardsStep(self):
+        if self._history:
+            self._live = self._history.pop()
+            self._gen_counter -= 1
 
     def getBoundingBox(self):
         min_x, min_y, max_x, max_y = None, None, None, None
