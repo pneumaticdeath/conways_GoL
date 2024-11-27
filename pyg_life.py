@@ -264,12 +264,10 @@ while True:
                 elif len(curr_cells) == len(historical_cells):
                     print("Stagnating on population")
                     stagnating += 1
-                    break
                 elif len(curr_cells.intersection(historical_cells)) \
                         >= args.similarity_threshold * len(curr_cells):
                     stagnating += 1
                     print("Stagnating on similarity")
-                    break
 
             if stagnating > 0:
                 stagnation += 1
