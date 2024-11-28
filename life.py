@@ -63,9 +63,12 @@ class Life(object):
         self._gen_counter += 1
 
     def backwardsStep(self):
+        """Move the simulation back one step.  Returns True if successful"""
         if self._history:
             self._live = self._history.pop()
             self._gen_counter -= 1
+            return True
+        return False
 
     def getBoundingBox(self):
         min_x, min_y, max_x, max_y = None, None, None, None

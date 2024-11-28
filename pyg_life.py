@@ -225,7 +225,10 @@ while True:
                 stagnation = 0
             elif event.key == pygame.K_b:
                 pause = True
-                game.backwardsStep()
+                if game.backwardsStep():
+                    print('Going back to generation {}'.format(game.getGeneration()))
+                else:
+                    print('Cannot go back any further, no more history')
             elif event.key == pygame.K_f:
                 delay_time /= speed_factor
                 print('Delay now {0} seconds'.format(delay_time))
