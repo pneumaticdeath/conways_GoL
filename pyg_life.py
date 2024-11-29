@@ -283,28 +283,29 @@ while True:
 
             stagnating = 0
             curr_cells = game.getLiveCells()
-            for historical_cells in game.getHistory()[-args.stagnation:]:
-                if curr_cells == historical_cells:
-                    # We've seen this exact pattern before so we're in a loop
-                    stagnating += 1
-                    stagnated = True
-                    print("Stagnated due to loop at {}".format(game.getGeneration()))
-                    break
-                elif len(curr_cells) == len(historical_cells):
-                    print("Stagnating on population")
-                    stagnating += 1
-                elif len(curr_cells.intersection(historical_cells)) \
-                        >= args.similarity_threshold * len(curr_cells):
-                    stagnating += 1
-                    print("Stagnating on similarity")
+            if args.stagnation > 0:
+                for historical_cells in game.getHistory()[-args.stagnation:]:
+                    if curr_cells == historical_cells:
+                        # We've seen this exact pattern before so we're in a loop
+                        stagnating += 1
+                        stagnated = True
+                        print("Stagnated due to loop at {}".format(game.getGeneration()))
+                        break
+                    elif len(curr_cells) == len(historical_cells):
+                        print("Stagnating on population")
+                        stagnating += 1
+                    elif len(curr_cells.intersection(historical_cells)) \
+                            >= args.similarity_threshold * len(curr_cells):
+                        stagnating += 1
+                        print("Stagnating on similarity")
 
-            if stagnating > 0:
-                stagnation += 1
-                if args.stagnation > 0 and stagnation >= args.stagnation:
-                    print("Stagnated at {}".format(game.getGeneration() - args.stagnation))
-                    stagnated = True
-            else:
-                stagnation = 0
+                if stagnating > 0:
+                    stagnation += 1
+                    if stagnation >= args.stagnation:
+                        print("Stagnated at {}".format(game.getGeneration() - args.stagnation))
+                        stagnated = True
+                else:
+                    stagnation = 0
 
     else:
         cell_color = 255, 0, 0
