@@ -94,6 +94,7 @@ if args.fullscreen:
 def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=True):
     window_width, window_height = window_size
     window.fill(bg_color)
+    pygame.display.set_caption('Generation {}  Cells {}'.format(game.getGeneration(), len(game.getLiveCells())))
 
     disp_width = (disp_max_x - disp_min_x) + 1
     disp_height = (disp_max_y - disp_min_y) + 1
