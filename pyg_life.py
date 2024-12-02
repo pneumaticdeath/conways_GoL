@@ -92,7 +92,7 @@ if args.fullscreen:
 
 
 def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=True):
-    window_width, window_height = window_size
+    window_width, window_height = window.get_size()
     window.fill(bg_color)
     pygame.display.set_caption('Generation {}  Cells {}'.format(game.getGeneration(), len(game.getLiveCells())))
 
@@ -127,7 +127,7 @@ def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=T
             else:
                 window_pixels[pix] = 1
         else:
-            pygame.draw.circle(window, cell_color, (x, y), max(1, 0.45 * scale))
+            pygame.draw.circle(window, cell_color, (int(x + scale / 2 + 0.5), int(y + scale / 2 + 0.5)), max(1, 0.45 * scale))
 
     if scale <= 2:
         max_dens = max([d for d in window_pixels.values()])
@@ -256,16 +256,14 @@ while True:
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_q:
                 sys.exit(0)
-        elif event.type == pygame.VIDEORESIZE:
-            window_size = event.size
 
     min_x, min_y, max_x, max_y = game.getBoundingBox()
 
     if not zoom_pause and min_x is not None:
         if min_x < bounding_min_x:
-            bounding_min_x = min_x - 1
+            bounding_min_x = min_x
         if min_y < bounding_min_y:
-            bounding_min_y = min_y - 1
+            bounding_min_y = min_y
         if max_x > bounding_max_x:
             bounding_max_x = max_x
         if max_y > bounding_max_y:
