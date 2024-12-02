@@ -110,8 +110,8 @@ def display(game, disp_min_x, disp_min_y, disp_max_x, disp_max_y, print_status=T
                       time.time() - last_frame_time))
     window_pixels = {}
 
-    disp_mid_x = int((disp_max_x + disp_min_x) / 2)
-    disp_mid_y = int((disp_max_y + disp_min_y) / 2)
+    disp_mid_x = (disp_max_x + disp_min_x) / 2
+    disp_mid_y = (disp_max_y + disp_min_y) / 2
 
     window_mid_x = int(window_width / 2 + 0.5)
     window_mid_y = int(window_height / 2 + 0.5)
