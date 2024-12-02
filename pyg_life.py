@@ -163,9 +163,9 @@ def shift(min_v, max_v, factor):
         return min_v - shiftamt, max_v - shiftamt
 
 
-def scale(min_v, max_v, factor):
-    mid = (max_v + min_v) / 2
-    new_min = int(mid - (mid - min_v) * factor + 0.5)
+def scale_range(min_v, max_v, factor):
+    mid = (max_v + min_v) / 2.0
+    new_min = int(mid - (mid - min_v) * factor - 0.5)
     new_max = int(mid + (max_v - mid) * factor + 0.5)
 
     if new_min == min_v:
@@ -174,7 +174,7 @@ def scale(min_v, max_v, factor):
     if new_max == max_v:
         new_max += 1 if factor > 1 else -1
 
-    if new_min < new_max:
+    if new_min <= new_max:
         return new_min, new_max
     else:
         return min_v, max_v
@@ -182,8 +182,8 @@ def scale(min_v, max_v, factor):
 
 def zoom(factor):
     global bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y
-    bounding_min_x, bounding_max_x = scale(bounding_min_x, bounding_max_x, factor)
-    bounding_min_y, bounding_max_y = scale(bounding_min_y, bounding_max_y, factor)
+    bounding_min_x, bounding_max_x = scale_range(bounding_min_x, bounding_max_x, factor)
+    bounding_min_y, bounding_max_y = scale_range(bounding_min_y, bounding_max_y, factor)
 
 
 def dump():
