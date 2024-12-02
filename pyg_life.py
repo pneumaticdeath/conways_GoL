@@ -263,9 +263,9 @@ while True:
 
     if not zoom_pause and min_x is not None:
         if min_x < bounding_min_x:
-            bounding_min_x = min_x
+            bounding_min_x = min_x - 1
         if min_y < bounding_min_y:
-            bounding_min_y = min_y
+            bounding_min_y = min_y - 1
         if max_x > bounding_max_x:
             bounding_max_x = max_x
         if max_y > bounding_max_y:
