@@ -210,7 +210,7 @@ class MainWindow(wxLifeUI.MainWindow):
         else:
             self.SetTitle('Generation: {}   Cells: {}'
                           .format(self._game.getGeneration(),
-                          len(self._game.getLiveCells())))
+                                  len(self._game.getLiveCells())))
         dc = wx.PaintDC(self.m_grid)
         dc.SetBackground(self._background)
         dc.SetBrush(self._brush)

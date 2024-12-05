@@ -34,6 +34,9 @@ class MainWindow ( wx.Frame ):
         self.m_file_save = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Save\tCtrl+S"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_file_menu.Append( self.m_file_save )
 
+        self.m_file_quit = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Quit\tCtrl+Q"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_file_menu.Append( self.m_file_quit )
+
         self.m_menubar4.Append( self.m_file_menu, _(u"File") )
 
         self.m_sim_menu = wx.Menu()
@@ -94,6 +97,7 @@ class MainWindow ( wx.Frame ):
         # Connect Events
         self.Bind( wx.EVT_MENU, self.OnOpen, id = self.m_file_load.GetId() )
         self.Bind( wx.EVT_MENU, self.OnSave, id = self.m_file_save.GetId() )
+        self.Bind( wx.EVT_MENU, self.OnClose, id = self.m_file_quit.GetId() )
         self.Bind( wx.EVT_MENU, self.RunSim, id = self.m_sim_run.GetId() )
         self.Bind( wx.EVT_MENU, self.PauseSim, id = self.m_sim_pause.GetId() )
         self.Bind( wx.EVT_MENU, self.TakeSingleStep, id = self.m_sim_step.GetId() )
@@ -114,6 +118,9 @@ class MainWindow ( wx.Frame ):
         event.Skip()
 
     def OnSave( self, event ):
+        event.Skip()
+
+    def OnClose( self, event ):
         event.Skip()
 
     def RunSim( self, event ):
