@@ -47,7 +47,7 @@ class MainWindow ( wx.Frame ):
         self.m_sim_step = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Single Step\tCtrl+N"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_step )
 
-        self.m_sim_random_fill = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Random Fill"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_sim_random_fill = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Random Fill\tCtrl+F"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_random_fill )
 
         self.m_sim_continue = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Continue\tCtrl+C"), wx.EmptyString, wx.ITEM_NORMAL )
@@ -65,7 +65,7 @@ class MainWindow ( wx.Frame ):
         self.m_menubar4.Append( self.m_sim_menu, _(u"Simulation") )
 
         self.m_zoom_menu = wx.Menu()
-        self.m_zoom_auto = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"Auto"), wx.EmptyString, wx.ITEM_CHECK )
+        self.m_zoom_auto = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"Auto\tCtrl+Z"), wx.EmptyString, wx.ITEM_CHECK )
         self.m_zoom_menu.Append( self.m_zoom_auto )
         self.m_zoom_auto.Check( True )
 
