@@ -44,6 +44,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self.m_grid.Bind(wx.EVT_KEY_DOWN, self.OnKeypress)
 
     def initializeGame(self, cells):
+        # self.OnContinue(paused=True)
         self._game = life.Life(cells)
         self._box_min_x, self._box_min_y, self._box_max_x, self._box_max_y = self._game.getBoundingBox()
         self.Refresh()
@@ -114,7 +115,7 @@ class MainWindow(wxLifeUI.MainWindow):
                     break
             if stagnating:
                 self._stagnation += 1
-                if self._stagnation > self._stagnation_window:
+                if self._stagnation >= self._stagnation_window:
                     self._stagnated = True
                     print('Stagnated at {}'.format(self._game.getGeneration() - self._stagnation))
             else:
@@ -146,6 +147,9 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def AutoZoom(self):
         min_x, min_y, max_x, max_y = self._game.getBoundingBox()
+
+        if min_x is None:
+            return
 
         if min_x < self._box_min_x:
             self._box_min_x = min_x
@@ -337,6 +341,71 @@ class MainWindow(wxLifeUI.MainWindow):
             return min_v + amount, max_v + amount
         elif factor < 0:
             return min_v - amount, max_v - amount
+
+    def OnSettings(self, event):
+        wasPaused = self._paused
+        if not self._paused:
+            self.PauseSim()
+
+        dialog = SettingDialog(self)
+        if dialog.ShowModal() == wx.ID_OK:
+            print("Saving settings")
+
+        if not wasPaused:
+            self.RunSim()
+
+
+class SettingDialog(wxLifeUI.SettingsDialog):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self._board_size = (None, None)
+        self._fill_factor = None
+        if type(parent) is MainWindow:
+            self.SetBoardSize(parent._board_size)
+            self.SetFillFactor(parent._fill_factor)
+            self.SetStagnationWindow(parent._stagnation_window)
+
+    def SetBoardSize(self, size):
+        self._board_size = size
+        self.m_textCtrl_width.SetValue(str(size[0]))
+        self.m_textCtrl_height.SetValue(str(size[1]))
+
+    def GetBoardSize(self):
+        return self._board_size
+
+    def SetFillFactor(self, factor):
+        self._fill_factor = factor
+        self.m_textCtrl_fill.SetValue(str(factor))
+
+    def GetFillFactor(self):
+        return self._fill_factor
+
+    def SetStagnationWindow(self, window):
+        self._stagnation_window = window
+        self.m_textCtrl_stagnation.SetValue(str(window))
+
+    def GetStagnationWindow(self):
+        return self._stagnation_window
+
+    def OnSave(self, event):
+        event.Skip()
+        try:
+            width = int(self.m_textCtrl_width.GetValue())
+            height = int(self.m_textCtrl_height.GetValue())
+            fill = int(self.m_textCtrl_fill.GetValue())
+            window = int(self.m_textCtrl_stagnation.GetValue())
+
+            self._board_size = (width, height)
+            self._fill_factor = fill
+            self._stagnation_window = window
+
+            if type(self.GetParent()) is MainWindow:
+                self.GetParent()._board_size = self.GetBoardSize()
+                self.GetParent()._fill_factor = self.GetFillFactor()
+                self.GetParent()._stagnation_window = self.GetStagnationWindow()
+            self.EndModal(wx.ID_OK)
+        except Exception as e:
+            print('Got exception {} while trying to parse settings'.format(repr(e)))
 
 
 app = WxLife(False)

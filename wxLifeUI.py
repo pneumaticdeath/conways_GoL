@@ -36,6 +36,11 @@ class MainWindow ( wx.Frame ):
 
         self.m_file_menu.AppendSeparator()
 
+        self.m_file_settings = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Settings\tCtrl+A"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_file_menu.Append( self.m_file_settings )
+
+        self.m_file_menu.AppendSeparator()
+
         self.m_file_quit = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Quit\tCtrl+Q"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_file_menu.Append( self.m_file_quit )
 
@@ -102,6 +107,7 @@ class MainWindow ( wx.Frame ):
         # Connect Events
         self.Bind( wx.EVT_MENU, self.OnOpen, id = self.m_file_load.GetId() )
         self.Bind( wx.EVT_MENU, self.OnSave, id = self.m_file_save.GetId() )
+        self.Bind( wx.EVT_MENU, self.OnSettings, id = self.m_file_settings.GetId() )
         self.Bind( wx.EVT_MENU, self.OnClose, id = self.m_file_quit.GetId() )
         self.Bind( wx.EVT_MENU, self.RunSim, id = self.m_sim_run.GetId() )
         self.Bind( wx.EVT_MENU, self.PauseSim, id = self.m_sim_pause.GetId() )
@@ -124,6 +130,9 @@ class MainWindow ( wx.Frame ):
         event.Skip()
 
     def OnSave( self, event ):
+        event.Skip()
+
+    def OnSettings( self, event ):
         event.Skip()
 
     def OnClose( self, event ):
@@ -160,6 +169,80 @@ class MainWindow ( wx.Frame ):
         event.Skip()
 
     def ZoomOut( self, event ):
+        event.Skip()
+
+
+###########################################################################
+## Class SettingsDialog
+###########################################################################
+
+class SettingsDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.DefaultSize, style = wx.DEFAULT_DIALOG_STYLE )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+
+        fgSizer1 = wx.FlexGridSizer( 0, 2, 0, 0 )
+        fgSizer1.SetFlexibleDirection( wx.BOTH )
+        fgSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+
+        self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, _(u"Fill Width"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText1.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText1, 0, wx.ALL, 5 )
+
+        self.m_textCtrl_width = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        fgSizer1.Add( self.m_textCtrl_width, 0, wx.ALL, 5 )
+
+        self.m_staticText2 = wx.StaticText( self, wx.ID_ANY, _(u"Fill Height"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText2.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText2, 0, wx.ALL, 5 )
+
+        self.m_textCtrl_height = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        fgSizer1.Add( self.m_textCtrl_height, 0, wx.ALL, 5 )
+
+        self.m_staticText3 = wx.StaticText( self, wx.ID_ANY, _(u"Fill Factor"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText3.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText3, 0, wx.ALL, 5 )
+
+        self.m_textCtrl_fill = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        fgSizer1.Add( self.m_textCtrl_fill, 0, wx.ALL, 5 )
+
+        self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, _(u"Stagnation Window"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText6.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText6, 0, wx.ALL, 5 )
+
+        self.m_textCtrl_stagnation = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        fgSizer1.Add( self.m_textCtrl_stagnation, 0, wx.ALL, 5 )
+
+        self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText5.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText5, 0, wx.ALL, 5 )
+
+        self.m_setting_save = wx.Button( self, wx.ID_ANY, _(u"Save"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        fgSizer1.Add( self.m_setting_save, 0, wx.ALL, 5 )
+
+
+        self.SetSizer( fgSizer1 )
+        self.Layout()
+        fgSizer1.Fit( self )
+
+        self.Centre( wx.BOTH )
+
+        # Connect Events
+        self.m_setting_save.Bind( wx.EVT_BUTTON, self.OnSave )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def OnSave( self, event ):
         event.Skip()
 
 
