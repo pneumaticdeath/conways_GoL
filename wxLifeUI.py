@@ -77,10 +77,10 @@ class MainWindow ( wx.Frame ):
         self.m_zoom_menu.Append( self.m_zoom_auto )
         self.m_zoom_auto.Check( True )
 
-        self.m_zoom_in = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"In"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_zoom_in = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"In\tCtrl+>"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_zoom_menu.Append( self.m_zoom_in )
 
-        self.m_zoom_out = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"Out"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_zoom_out = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"Out\tCtrl+<"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_zoom_menu.Append( self.m_zoom_out )
 
         self.m_menubar4.Append( self.m_zoom_menu, _(u"Zoom") )
