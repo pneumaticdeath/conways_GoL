@@ -93,7 +93,7 @@ class MainWindow(wxLifeUI.MainWindow):
     def StepBack(self, event=None):
         self.PauseSim()
         if not self._game.backwardsStep():
-            print('Can\'t go back')
+            self.setStatus('Can\'t go back')
         self.Refresh()
 
     def checkStagnation(self):
@@ -102,22 +102,22 @@ class MainWindow(wxLifeUI.MainWindow):
         if not self._stagnated and self._stagnation_window > 0:
             if len(curr_cells) == len(self._game.getHistory()[-1]):
                 stagnating = True
-                print('Stagnating on population at {}'.format(self._game.getGeneration()))
+                self.setStatus('Stagnating on population at {}'.format(self._game.getGeneration()))
             for historical_cells in self._game.getHistory()[-self._stagnation_window:]:
                 if curr_cells == historical_cells:
                     stagnating = True
                     self._stagnated = True
-                    print('Stagnated on loop at {}'.format(self._game.getGeneration()))
+                    self.setStatus('Stagnated on loop at {}'.format(self._game.getGeneration()))
                     break
                 elif len(curr_cells.intersection(historical_cells)) > len(curr_cells) * self._similarity_threshold:
                     stagnating = True
-                    print('Stagnating on similarity at {}'.format(self._game.getGeneration()))
+                    self.setStatus('Stagnating on similarity at {}'.format(self._game.getGeneration()))
                     break
             if stagnating:
                 self._stagnation += 1
                 if self._stagnation >= self._stagnation_window:
                     self._stagnated = True
-                    print('Stagnated at {}'.format(self._game.getGeneration() - self._stagnation))
+                    self.setStatus('Stagnated at {}'.format(self._game.getGeneration() - self._stagnation))
             else:
                 self._stagnation = 0
 
@@ -349,10 +349,13 @@ class MainWindow(wxLifeUI.MainWindow):
 
         dialog = SettingDialog(self)
         if dialog.ShowModal() == wx.ID_OK:
-            print("Saving settings")
+            self.setStatus("Saving settings")
 
         if not wasPaused:
             self.RunSim()
+
+    def setStatus(self, text):
+        self.GetStatusBar().SetStatusText(text)
 
 
 class SettingDialog(wxLifeUI.SettingsDialog):
@@ -405,7 +408,7 @@ class SettingDialog(wxLifeUI.SettingsDialog):
                 self.GetParent()._stagnation_window = self.GetStagnationWindow()
             self.EndModal(wx.ID_OK)
         except Exception as e:
-            print('Got exception {} while trying to parse settings'.format(repr(e)))
+            self.GetParent().setStatus('Got exception {} while trying to parse settings'.format(repr(e)))
 
 
 app = WxLife(False)
