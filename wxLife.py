@@ -21,7 +21,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self.SetIcon(wx.Icon(self.icon_file, type=wx.BITMAP_TYPE_PNG))
         self._paused = True
         self._auto_zoom = True
-        self._board_size = (100, 100)
+        self._board_size = (20, 20)
         self._fill_factor = 40
         self._delay_time_ms = 100
         self._speed_factor = 1.5
@@ -180,6 +180,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self.initializeGame(newCells)
 
     def OnSave(self, event):
+        self.PauseSim()
         save_dialog = wx.FileDialog(self, "Save state", self._directory, '',
                                     '*.life', wx.FD_SAVE)
         if save_dialog.ShowModal() == wx.ID_OK:
