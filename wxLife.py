@@ -201,7 +201,15 @@ class MainWindow(wxLifeUI.MainWindow):
                 out.write('\n')
 
     def OnPaint(self, event):
-        self.SetTitle('Generation: {}   Cells: {}'.format(self._game.getGeneration(), len(self._game.getLiveCells())))
+        if self._filename:
+            self.SetTitle('"{}"  Generation: {}   Cells: {}'
+                          .format(self._filename,
+                                  self._game.getGeneration(),
+                                  len(self._game.getLiveCells())))
+        else:
+            self.SetTitle('Generation: {}   Cells: {}'
+                          .format(self._game.getGeneration(),
+                          len(self._game.getLiveCells())))
         dc = wx.PaintDC(self.m_grid)
         dc.SetBackground(self._background)
         dc.SetBrush(self._brush)
@@ -271,13 +279,20 @@ class MainWindow(wxLifeUI.MainWindow):
         self.Refresh()
 
     def ZoomIn(self, event=None):
+        self._auto_zoom = False
+        self.m_zoom_auto.Check(False)
         self.zoom(1 / self._zoom_factor)
 
     def ZoomOut(self, event=None):
+        self._auto_zoom = False
+        self.m_zoom_auto.Check(False)
         self.zoom(self._zoom_factor)
 
     def ToggleZoomAuto(self, event):
         self._auto_zoom = not self._auto_zoom
+        if self._auto_zoom:
+            self.AutoZoom()
+            self.Refresh()
 
     def OnClose(self, event):
         self._timer.Stop()
