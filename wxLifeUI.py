@@ -28,38 +28,38 @@ class MainWindow ( wx.Frame ):
 
         self.m_menubar4 = wx.MenuBar( 0 )
         self.m_file_menu = wx.Menu()
-        self.m_file_load = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Open"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_file_load = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Open\tCtrl+O"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_file_menu.Append( self.m_file_load )
 
-        self.m_file_save = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Save"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_file_save = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Save\tCtrl+S"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_file_menu.Append( self.m_file_save )
 
         self.m_menubar4.Append( self.m_file_menu, _(u"File") )
 
         self.m_sim_menu = wx.Menu()
-        self.m_sim_run = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"&Run"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_sim_run = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Run\tCtrl+R"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_run )
 
-        self.m_sim_pause = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Pause"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_sim_pause = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Pause\tCtrl+P"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_pause )
         self.m_sim_pause.Enable( False )
 
-        self.m_sim_step = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Single Step"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_sim_step = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Single Step\tCtrl+N"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_step )
 
         self.m_sim_random_fill = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Random Fill"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_random_fill )
 
-        self.m_sim_continue = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Continue"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_sim_continue = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Continue\tCtrl+C"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_continue )
         self.m_sim_continue.Enable( False )
 
         self.m_sim_menu.AppendSeparator()
 
-        self.m_sim_faster = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Faster"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_sim_faster = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Faster\tCtrl++"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_faster )
 
-        self.m_sim_slower = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Slower"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_sim_slower = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Slower\tCtrl+-"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_slower )
 
         self.m_menubar4.Append( self.m_sim_menu, _(u"Simulation") )

@@ -93,7 +93,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">Open</property>
+            <property name="label">Open	Ctrl+O</property>
             <property name="name">m_file_load</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
@@ -107,7 +107,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">Save</property>
+            <property name="label">Save	Ctrl+S</property>
             <property name="name">m_file_save</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
@@ -126,7 +126,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">&amp;Run</property>
+            <property name="label">Run	Ctrl+R</property>
             <property name="name">m_sim_run</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
@@ -140,7 +140,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">Pause</property>
+            <property name="label">Pause	Ctrl+P</property>
             <property name="name">m_sim_pause</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
@@ -154,7 +154,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">Single Step</property>
+            <property name="label">Single Step	Ctrl+N</property>
             <property name="name">m_sim_step</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
@@ -182,7 +182,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">Continue</property>
+            <property name="label">Continue	Ctrl+C</property>
             <property name="name">m_sim_continue</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
@@ -200,7 +200,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">Faster</property>
+            <property name="label">Faster	Ctrl++</property>
             <property name="name">m_sim_faster</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
@@ -214,7 +214,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">Slower</property>
+            <property name="label">Slower	Ctrl+-</property>
             <property name="name">m_sim_slower</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
