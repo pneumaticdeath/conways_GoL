@@ -14,9 +14,11 @@ class WxLife(wx.App):
 
 class MainWindow(wxLifeUI.MainWindow):
     _zoom_factor = 1.1
+    icon_file = 'icon_1024.png'
 
     def __init__(self, parent):
         wxLifeUI.MainWindow.__init__(self, parent)
+        self.SetIcon(wx.Icon(self.icon_file, type=wx.BITMAP_TYPE_PNG))
         self._paused = True
         self._auto_zoom = True
         self._board_size = (100, 100)
@@ -301,5 +303,6 @@ class MainWindow(wxLifeUI.MainWindow):
 
 app = WxLife(False)
 mainWindow = MainWindow(None)
+app.SetTopWindow(mainWindow)
 mainWindow.Show()
 app.MainLoop()
