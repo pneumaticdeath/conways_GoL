@@ -87,6 +87,12 @@ class MainWindow(wxLifeUI.MainWindow):
         self.checkStagnation()
         self.Refresh()
 
+    def StepBack(self, event=None):
+        self.PauseSim()
+        if not self._game.backwardsStep():
+            print('Can\'t go back')
+        self.Refresh()
+
     def checkStagnation(self):
         stagnating = False
         curr_cells = self._game.getLiveCells()

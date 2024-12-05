@@ -50,6 +50,9 @@ class MainWindow ( wx.Frame ):
         self.m_sim_step = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Single Step\tCtrl+N"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_step )
 
+        self.m_sim_back = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Backwars Step\tCtrl+B"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_sim_menu.Append( self.m_sim_back )
+
         self.m_sim_random_fill = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Random Fill\tCtrl+F"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_random_fill )
 
@@ -101,6 +104,7 @@ class MainWindow ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.RunSim, id = self.m_sim_run.GetId() )
         self.Bind( wx.EVT_MENU, self.PauseSim, id = self.m_sim_pause.GetId() )
         self.Bind( wx.EVT_MENU, self.TakeSingleStep, id = self.m_sim_step.GetId() )
+        self.Bind( wx.EVT_MENU, self.StepBack, id = self.m_sim_back.GetId() )
         self.Bind( wx.EVT_MENU, self.RandomFill, id = self.m_sim_random_fill.GetId() )
         self.Bind( wx.EVT_MENU, self.OnContinue, id = self.m_sim_continue.GetId() )
         self.Bind( wx.EVT_MENU, self.OnFaster, id = self.m_sim_faster.GetId() )
@@ -130,6 +134,9 @@ class MainWindow ( wx.Frame ):
         event.Skip()
 
     def TakeSingleStep( self, event ):
+        event.Skip()
+
+    def StepBack( self, event ):
         event.Skip()
 
     def RandomFill( self, event ):
