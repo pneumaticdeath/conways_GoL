@@ -114,6 +114,10 @@
             <property name="unchecked_bitmap"></property>
             <event name="OnMenuSelection">OnSave</event>
           </object>
+          <object class="separator" expanded="true">
+            <property name="name">m_separator2</property>
+            <property name="permission">none</property>
+          </object>
           <object class="wxMenuItem" expanded="true">
             <property name="bitmap"></property>
             <property name="checked">0</property>

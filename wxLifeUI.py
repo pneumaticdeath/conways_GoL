@@ -34,6 +34,8 @@ class MainWindow ( wx.Frame ):
         self.m_file_save = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Save\tCtrl+S"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_file_menu.Append( self.m_file_save )
 
+        self.m_file_menu.AppendSeparator()
+
         self.m_file_quit = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Quit\tCtrl+Q"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_file_menu.Append( self.m_file_quit )
 
