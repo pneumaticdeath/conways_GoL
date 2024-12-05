@@ -25,6 +25,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self._fill_factor = 40
         self._delay_time_ms = 100
         self._speed_factor = 1.5
+        self._shift_factor = 0.1
         self._single_step = False
         self._stagnated = False
         self._stagnation = 0
@@ -40,6 +41,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self._timer = wx.Timer()
         self._timer.Bind(wx.EVT_TIMER, self.OnTimer)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
+        self.m_grid.Bind(wx.EVT_KEY_DOWN, self.OnKeypress)
 
     def initializeGame(self, cells):
         self._game = life.Life(cells)
@@ -305,6 +307,36 @@ class MainWindow(wxLifeUI.MainWindow):
     def OnClose(self, event):
         self._timer.Stop()
         self.Destroy()
+
+    def OnKeypress(self, event):
+        keycode = event.GetKeyCode()
+        if keycode == wx.WXK_SPACE or keycode == wx.WXK_MEDIA_NEXT_TRACK:
+            self.TakeSingleStep(event)
+        elif keycode == wx.WXK_MEDIA_PLAY_PAUSE:
+            if self._paused:
+                self.RunSim(event)
+            else:
+                self.PauseSim(event)
+        elif keycode == wx.WXK_MEDIA_PREV_TRACK:
+            self.StepBack(event)
+        elif keycode == wx.WXK_LEFT:
+            self._box_min_x, self._box_max_x = self.shift(self._box_min_x, self._box_max_x, -self._shift_factor)
+        elif keycode == wx.WXK_RIGHT:
+            self._box_min_x, self._box_max_x = self.shift(self._box_min_x, self._box_max_x, self._shift_factor)
+        elif keycode == wx.WXK_UP:
+            self._box_min_y, self._box_max_y = self.shift(self._box_min_y, self._box_max_y, -self._shift_factor)
+        elif keycode == wx.WXK_DOWN:
+            self._box_min_y, self._box_max_y = self.shift(self._box_min_y, self._box_max_y, self._shift_factor)
+        self.Refresh()
+        event.Skip()
+
+    def shift(self, min_v, max_v, factor):
+        spread = max_v - min_v
+        amount = max(1, int(spread * abs(factor)))
+        if factor > 0:
+            return min_v + amount, max_v + amount
+        elif factor < 0:
+            return min_v - amount, max_v - amount
 
 
 app = WxLife(False)
