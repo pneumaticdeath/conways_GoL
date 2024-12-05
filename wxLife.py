@@ -94,17 +94,16 @@ class MainWindow(wxLifeUI.MainWindow):
             if len(curr_cells) == len(self._game.getHistory()[-1]):
                 stagnating = True
                 print('Stagnating on population at {}'.format(self._game.getGeneration()))
-            else:
-                for historical_cells in self._game.getHistory()[-self._stagnation_window:]:
-                    if curr_cells == historical_cells:
-                        stagnating = True
-                        self._stagnated = True
-                        print('Stagnated on loop at {}'.format(self._game.getGeneration()))
-                        break
-                    elif len(curr_cells.intersection(historical_cells)) > len(curr_cells) * self._similarity_threshold:
-                        stagnating = True
-                        print('Stagnating on similarity at {}'.format(self._game.getGeneration()))
-                        break
+            for historical_cells in self._game.getHistory()[-self._stagnation_window:]:
+                if curr_cells == historical_cells:
+                    stagnating = True
+                    self._stagnated = True
+                    print('Stagnated on loop at {}'.format(self._game.getGeneration()))
+                    break
+                elif len(curr_cells.intersection(historical_cells)) > len(curr_cells) * self._similarity_threshold:
+                    stagnating = True
+                    print('Stagnating on similarity at {}'.format(self._game.getGeneration()))
+                    break
             if stagnating:
                 self._stagnation += 1
                 if self._stagnation > self._stagnation_window:
