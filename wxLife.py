@@ -112,12 +112,12 @@ class MainWindow(wxLifeUI.MainWindow):
                 elif len(curr_cells.intersection(historical_cells)) > len(curr_cells) * self._similarity_threshold:
                     stagnating = True
                     self.setStatus('Stagnating on similarity at generation {}'.format(self._game.getGeneration()))
-                    break
+                    # break
             if stagnating:
                 self._stagnation += 1
                 if self._stagnation >= self._stagnation_window:
                     self._stagnated = True
-                    self.setStatus('Stagnated at generation {}'.format(self._game.getGeneration() - self._stagnation))
+                    # self.setStatus('Stagnated at generation {}'.format(self._game.getGeneration() - self._stagnation))
             else:
                 self._stagnation = 0
 
@@ -356,6 +356,7 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def setStatus(self, text):
         self.GetStatusBar().SetStatusText(text)
+        print(text)
 
 
 class SettingDialog(wxLifeUI.SettingsDialog):
@@ -367,6 +368,7 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             self.SetBoardSize(parent._board_size)
             self.SetFillFactor(parent._fill_factor)
             self.SetStagnationWindow(parent._stagnation_window)
+            self.SetSimilarityThreshold(parent._similarity_threshold)
 
     def SetBoardSize(self, size):
         self._board_size = size
@@ -390,6 +392,13 @@ class SettingDialog(wxLifeUI.SettingsDialog):
     def GetStagnationWindow(self):
         return self._stagnation_window
 
+    def SetSimilarityThreshold(self, threshold):
+        self._similarity_threshold = threshold
+        self.m_textCtrl_similarity.SetValue(str(threshold))
+
+    def GetSimilarityThreshold(self):
+        return self._similarity_threshold
+
     def OnSave(self, event):
         event.Skip()
         try:
@@ -397,27 +406,33 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             height = int(self.m_textCtrl_height.GetValue())
             fill = int(self.m_textCtrl_fill.GetValue())
             window = int(self.m_textCtrl_stagnation.GetValue())
+            threshold = float(self.m_textCtrl_similarity.GetValue())
 
-            if width <= 0:
-                self.setStatus('Width must be a positive number')
-            elif height <= 0:
-                self.setStatus('Height must be a positive number')
-            elif fill <= 0 or fill > 100:
-                self.setStatus('Fill must be between 1-100')
-            elif window < 0:
-                self.setStatus('Stagnation window cannot be negative')
-            else:
-                self._board_size = (width, height)
-                self._fill_factor = fill
-                self._stagnation_window = window
+        except Exception:
+            self.setStatus('Unable to parse values, please use numbers')
 
-                if type(self.GetParent()) is MainWindow:
-                    self.GetParent()._board_size = self.GetBoardSize()
-                    self.GetParent()._fill_factor = self.GetFillFactor()
-                    self.GetParent()._stagnation_window = self.GetStagnationWindow()
-                self.EndModal(wx.ID_OK)
-        except Exception as e:
-            self.setStatus('Got exception {} while trying to parse settings'.format(repr(e)))
+        if width <= 0:
+            self.setStatus('Width must be a positive number')
+        elif height <= 0:
+            self.setStatus('Height must be a positive number')
+        elif fill <= 0 or fill > 100:
+            self.setStatus('Fill must be between 1-100')
+        elif window < 0:
+            self.setStatus('Stagnation window cannot be negative')
+        elif threshold < 0 or threshold > 1:
+            self.setStatus('Similarity threshold must be between 0 and 1')
+        else:
+            self._board_size = (width, height)
+            self._fill_factor = fill
+            self._stagnation_window = window
+            self._similarity_threshold = threshold
+
+            if type(self.GetParent()) is MainWindow:
+                self.GetParent()._board_size = self.GetBoardSize()
+                self.GetParent()._fill_factor = self.GetFillFactor()
+                self.GetParent()._stagnation_window = self.GetStagnationWindow()
+                self.GetParent()._similarity_threshold = self.GetSimilarityThreshold()
+            self.EndModal(wx.ID_OK)
 
     def setStatus(self, text):
         alert = AlertDialog(self, text)

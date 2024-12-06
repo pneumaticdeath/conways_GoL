@@ -220,6 +220,14 @@ class SettingsDialog ( wx.Dialog ):
         self.m_textCtrl_stagnation = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
         fgSizer1.Add( self.m_textCtrl_stagnation, 0, wx.ALL, 5 )
 
+        self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, _(u"Similarity threshold"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText7.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText7, 0, wx.ALL, 5 )
+
+        self.m_textCtrl_similarity = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        fgSizer1.Add( self.m_textCtrl_similarity, 0, wx.ALL, 5 )
+
         self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText5.Wrap( -1 )
 
