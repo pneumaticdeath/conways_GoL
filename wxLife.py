@@ -314,7 +314,7 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def OnKeypress(self, event):
         keycode = event.GetKeyCode()
-        if keycode == wx.WXK_SPACE or keycode == wx.WXK_MEDIA_NEXT_TRACK:
+        if keycode == wx.WXK_RETURN or keycode == wx.WXK_MEDIA_NEXT_TRACK:
             self.TakeSingleStep(event)
         elif keycode == wx.WXK_MEDIA_PLAY_PAUSE:
             if self._paused:
@@ -398,17 +398,41 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             fill = int(self.m_textCtrl_fill.GetValue())
             window = int(self.m_textCtrl_stagnation.GetValue())
 
-            self._board_size = (width, height)
-            self._fill_factor = fill
-            self._stagnation_window = window
+            if width <= 0:
+                self.setStatus('Width must be a positive number')
+            elif height <= 0:
+                self.setStatus('Height must be a positive number')
+            elif fill <= 0 or fill > 100:
+                self.setStatus('Fill must be between 1-100')
+            elif window < 0:
+                self.setStatus('Stagnation window cannot be negative')
+            else:
+                self._board_size = (width, height)
+                self._fill_factor = fill
+                self._stagnation_window = window
 
-            if type(self.GetParent()) is MainWindow:
-                self.GetParent()._board_size = self.GetBoardSize()
-                self.GetParent()._fill_factor = self.GetFillFactor()
-                self.GetParent()._stagnation_window = self.GetStagnationWindow()
-            self.EndModal(wx.ID_OK)
+                if type(self.GetParent()) is MainWindow:
+                    self.GetParent()._board_size = self.GetBoardSize()
+                    self.GetParent()._fill_factor = self.GetFillFactor()
+                    self.GetParent()._stagnation_window = self.GetStagnationWindow()
+                self.EndModal(wx.ID_OK)
         except Exception as e:
-            self.GetParent().setStatus('Got exception {} while trying to parse settings'.format(repr(e)))
+            self.setStatus('Got exception {} while trying to parse settings'.format(repr(e)))
+
+    def setStatus(self, text):
+        alert = AlertDialog(self, text)
+        alert.ShowModal()
+
+
+class AlertDialog(wxLifeUI.AlertDialog):
+    def __init__(self, parent, text):
+        super().__init__(parent)
+        self.m_text_alert.SetLabel(text)
+        self.Fit()
+
+    def OnClose(self, event):
+        self.EndModal(wx.ID_OK)
+        self.Destroy()
 
 
 app = WxLife(False)

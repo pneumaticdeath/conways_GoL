@@ -247,3 +247,45 @@ class SettingsDialog ( wx.Dialog ):
         event.Skip()
 
 
+###########################################################################
+## Class AlertDialog
+###########################################################################
+
+class AlertDialog ( wx.Dialog ):
+
+    def __init__( self, parent ):
+        wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.DEFAULT_DIALOG_STYLE )
+
+        self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+
+        fgSizer2 = wx.FlexGridSizer( 0, 1, 0, 0 )
+        fgSizer2.SetFlexibleDirection( wx.VERTICAL )
+        fgSizer2.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+
+        self.m_text_alert = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_text_alert.Wrap( -1 )
+
+        fgSizer2.Add( self.m_text_alert, 0, wx.ALL, 5 )
+
+        self.m_button_ok = wx.Button( self, wx.ID_ANY, _(u"Ok"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        fgSizer2.Add( self.m_button_ok, 0, wx.ALL, 5 )
+
+
+        self.SetSizer( fgSizer2 )
+        self.Layout()
+        fgSizer2.Fit( self )
+
+        self.Centre( wx.BOTH )
+
+        # Connect Events
+        self.m_button_ok.Bind( wx.EVT_BUTTON, self.OnClose )
+
+    def __del__( self ):
+        pass
+
+
+    # Virtual event handlers, override them in your derived class
+    def OnClose( self, event ):
+        event.Skip()
+
+
