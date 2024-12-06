@@ -7,13 +7,10 @@ import wx
 import wxLifeUI
 
 
-class WxLife(wx.App):
-    def __init__(self, *args, **kwargs):
-        wx.App.__init__(self, *args, **kwargs)
-
-
 class MainWindow(wxLifeUI.MainWindow):
     _zoom_factor = 1.1
+    _speed_factor = 1.5
+    _shift_factor = 0.1
     icon_file = 'icon_1024.png'
 
     def __init__(self, parent):
@@ -21,11 +18,10 @@ class MainWindow(wxLifeUI.MainWindow):
         self.SetIcon(wx.Icon(self.icon_file, type=wx.BITMAP_TYPE_PNG))
         self._paused = True
         self._auto_zoom = True
+        self._edit_mode = False
         self._board_size = (20, 20)
         self._fill_factor = 40
         self._delay_time_ms = 100
-        self._speed_factor = 1.5
-        self._shift_factor = 0.1
         self._single_step = False
         self._stagnated = False
         self._stagnation = 0
@@ -33,10 +29,18 @@ class MainWindow(wxLifeUI.MainWindow):
         self._stagnation_window = 10
         self._similarity_threshold = 0.95
         self._background = wx.Brush('black')
-        self._brush = wx.Brush('blue')
+        self._paused_brush = wx.Brush('blue')
+        self._running_brush = wx.Brush('green')
+        self._stagnated_brush = wx.Brush('red')
+        self._edit_brush = wx.Brush('yellow')
         self._directory = 'examples'
         self._filename = ''
+        # self._box_min_x = 0
+        # self._box_min_y = 0
+        # self._box_max_x = self._board_size[0] - 1
+        # self._box_max_y = self._board_size[1] - 1
         self.initializeGame(set())
+        self.m_grid.Bind(wx.EVT_LEFT_DOWN, self.OnLeftClick)
         self.m_grid.Bind(wx.EVT_PAINT, self.OnPaint)
         self._timer = wx.Timer()
         self._timer.Bind(wx.EVT_TIMER, self.OnTimer)
@@ -47,7 +51,22 @@ class MainWindow(wxLifeUI.MainWindow):
         # self.OnContinue(paused=True)
         self._game = life.Life(cells)
         self._box_min_x, self._box_min_y, self._box_max_x, self._box_max_y = self._game.getBoundingBox()
+        if self._box_min_x is None:
+            self._box_min_x = 0
+            self._box_min_y = 0
+            self._box_max_x = self._board_size[0] - 1
+            self._box_max_y = self._board_size[1] - 1
         self.Refresh()
+
+    def getBrush(self):
+        if self._edit_mode:
+            return self._edit_brush
+        elif self._stagnated:
+            return self._stagnated_brush
+        elif self._paused:
+            return self._paused_brush
+        else:
+            return self._running_brush
 
     def RandomFill(self, event):
         self.OnContinue(paused=True)
@@ -62,8 +81,8 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def RunSim(self, event=None):
         self._paused = False
+        self.editMode(False)
         self._timer.Start(int(self._delay_time_ms))
-        self._brush = wx.Brush("green")
         self.m_sim_run.Enable(False)
         self.m_sim_pause.Enable(True)
         self.Refresh()
@@ -71,7 +90,6 @@ class MainWindow(wxLifeUI.MainWindow):
     def PauseSim(self, event=None):
         self._paused = True
         self._timer.Stop()
-        self._brush = wx.Brush("blue")
         self.m_sim_run.Enable(True)
         self.m_sim_pause.Enable(False)
         self.Refresh()
@@ -124,7 +142,6 @@ class MainWindow(wxLifeUI.MainWindow):
         if self._stagnated:
             self.PauseSim()
             self.m_sim_continue.Enable(True)
-            self._brush = wx.Brush('red')
 
     def OnContinue(self, event=None, paused=False):
         self._stagnated = False
@@ -214,6 +231,32 @@ class MainWindow(wxLifeUI.MainWindow):
                     out.write('*' if (x, y) in cells else ' ')
                 out.write('\n')
 
+    def OnLeftClick(self, event):
+        if self._edit_mode:
+            print(f'x: {event.x} y: {event.y}')
+            dc = wx.PaintDC(self.m_grid)
+            # print(type(event))
+            # print(dir(event))
+            pos = event.GetLogicalPosition(dc)
+            print(f'click pos {pos}')
+            print(f'Scale {self._scale} BoxMid ({self._box_mid_x}, {self._box_mid_y})')
+            x_rel_to_center = (pos.x - self._display_mid_x)
+            y_rel_to_center = (pos.y - self._display_mid_y)
+            print(f'Rel to center ({x_rel_to_center}, {y_rel_to_center})')
+            cell_x = int(self._box_mid_x + x_rel_to_center/self._scale + 0.5)
+            cell_y = int(self._box_mid_y + y_rel_to_center/self._scale + 0.5)
+            print('Cell ({}, {})'.format(cell_x, cell_y))
+            cell = (cell_x, cell_y)
+            cells = self._game.getLiveCells()
+            if cell in cells:
+                cells.remove(cell)
+            else:
+                cells.add(cell)
+        else:
+            print('Click while not in edit mode')
+        self.Refresh()
+        event.Skip()
+
     def OnPaint(self, event):
         if self._filename:
             self.SetTitle('"{}"  Generation: {}   Cells: {}'
@@ -226,43 +269,39 @@ class MainWindow(wxLifeUI.MainWindow):
                                   len(self._game.getLiveCells())))
         dc = wx.PaintDC(self.m_grid)
         dc.SetBackground(self._background)
-        dc.SetBrush(self._brush)
-        dc.SetPen(wx.Pen(self._brush.GetColour()))
+        dc.SetBrush(self.getBrush())
+        dc.SetPen(wx.Pen(self.getBrush().GetColour()))
         dc.Clear()
-        if self._box_min_x is None:
-            return
-        box_width = self._box_max_x - self._box_min_x + 1
-        box_height = self._box_max_y - self._box_min_y + 1
         disp_size = dc.GetSize()
         disp_width = disp_size.GetWidth()
         disp_height = disp_size.GetHeight()
-        scale = min(disp_width / (box_width + 1), disp_height / (box_height + 1))
+        box_width = self._box_max_x - self._box_min_x + 1
+        box_height = self._box_max_y - self._box_min_y + 1
+        self._scale = min(disp_width / (box_width + 1), disp_height / (box_height + 1))
 
-        box_mid_x = (self._box_max_x + self._box_min_x) / 2
-        box_mid_y = (self._box_max_y + self._box_min_y) / 2
+        self._box_mid_x = (self._box_max_x + self._box_min_x) / 2
+        self._box_mid_y = (self._box_max_y + self._box_min_y) / 2
 
-        display_mid_x = int(disp_width / 2 + 0.5)
-        display_mid_y = int(disp_height / 2 + 0.5)
-
+        self._display_mid_x = disp_width / 2
+        self._display_mid_y = disp_height / 2
         pixels = {}
         for cell_x, cell_y in self._game.getLiveCells():
-            x = display_mid_x + int(scale * (cell_x - box_mid_x + 0.5))
-            y = display_mid_y + int(scale * (cell_y - box_mid_y + 0.5))
+            x = int(self._display_mid_x + self._scale * (cell_x - self._box_mid_x + 0.5))
+            y = int(self._display_mid_y + self._scale * (cell_y - self._box_mid_y + 0.5))
 
-            if scale <= 2:
+            if self._scale <= 2:
                 if (x, y) in pixels:
                     pixels[(x, y)] += 1
                 else:
                     pixels[(x, y)] = 1
             else:
-                point = dc.DeviceToLogical(int(x - scale / 2 + 0.5), int(y - scale / 2 + 0.5))
-                # print('Cell ({}, {}) is at {},{} -> {}'.format(cell_x, cell_y, x, y, point))
-                dc.DrawCircle(point, max(1, int(scale * 0.45)))
+                point = wx.Point(int(x - self._scale / 2 + 0.5), int(y - self._scale / 2 + 0.5))
+                dc.DrawCircle(point, max(1, int(self._scale * 0.45)))
 
-        if scale <= 2:
+        if self._scale <= 2:
             max_dens = max([d for d in pixels.values()])
             bg_color = dc.GetBackground().GetColour()
-            brush_color = self._brush.GetColour()
+            brush_color = self.getBrush().GetColour()
             for pos, d in pixels.items():
                 new_color = wx.Colour(int(bg_color.GetRed() * (max_dens - d) / max_dens + brush_color.GetRed() * d / max_dens),
                                       int(bg_color.GetGreen() * (max_dens - d) / max_dens + brush_color.GetGreen() * d / max_dens),
@@ -307,6 +346,20 @@ class MainWindow(wxLifeUI.MainWindow):
         if self._auto_zoom:
             self.AutoZoom()
             self.Refresh()
+
+    def ToggleEditMode(self, event):
+        self.editMode(not self._edit_mode)
+
+    def editMode(self, mode):
+        if mode != self._edit_mode:
+            self._edit_mode = mode
+            self.m_sim_edit.Check(mode)
+            if mode:
+                self.PauseSim()
+                self.setStatus('Edit Mode')
+            else:
+                self.setStatus('Leaving Edit Mode')
+                self.Refresh()
 
     def OnClose(self, event):
         self._timer.Stop()
@@ -450,7 +503,7 @@ class AlertDialog(wxLifeUI.AlertDialog):
         self.Destroy()
 
 
-app = WxLife(False)
+app = wx.App(False)
 mainWindow = MainWindow(None)
 app.SetTopWindow(mainWindow)
 mainWindow.Show()

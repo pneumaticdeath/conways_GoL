@@ -67,6 +67,9 @@ class MainWindow ( wx.Frame ):
         self.m_sim_menu.Append( self.m_sim_continue )
         self.m_sim_continue.Enable( False )
 
+        self.m_sim_edit = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Edit Mode\tCtrl+E"), wx.EmptyString, wx.ITEM_CHECK )
+        self.m_sim_menu.Append( self.m_sim_edit )
+
         self.m_sim_menu.AppendSeparator()
 
         self.m_sim_faster = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Faster\tCtrl++"), wx.EmptyString, wx.ITEM_NORMAL )
@@ -116,6 +119,7 @@ class MainWindow ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.StepBack, id = self.m_sim_back.GetId() )
         self.Bind( wx.EVT_MENU, self.RandomFill, id = self.m_sim_random_fill.GetId() )
         self.Bind( wx.EVT_MENU, self.OnContinue, id = self.m_sim_continue.GetId() )
+        self.Bind( wx.EVT_MENU, self.ToggleEditMode, id = self.m_sim_edit.GetId() )
         self.Bind( wx.EVT_MENU, self.OnFaster, id = self.m_sim_faster.GetId() )
         self.Bind( wx.EVT_MENU, self.OnSlower, id = self.m_sim_slower.GetId() )
         self.Bind( wx.EVT_MENU, self.ToggleZoomAuto, id = self.m_zoom_auto.GetId() )
@@ -155,6 +159,9 @@ class MainWindow ( wx.Frame ):
         event.Skip()
 
     def OnContinue( self, event ):
+        event.Skip()
+
+    def ToggleEditMode( self, event ):
         event.Skip()
 
     def OnFaster( self, event ):
