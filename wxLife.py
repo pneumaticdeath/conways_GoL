@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import life
+import math
 import os
 import random
 import wx
@@ -237,8 +238,8 @@ class MainWindow(wxLifeUI.MainWindow):
             x_rel_to_center = (event.x - self._display_mid_x)
             y_rel_to_center = (event.y - self._display_mid_y)
             print(f'Rel to center ({x_rel_to_center}, {y_rel_to_center})')
-            cell_x = int(self._box_mid_x + x_rel_to_center/self._scale + 0.5)
-            cell_y = int(self._box_mid_y + y_rel_to_center/self._scale + 0.5)
+            cell_x = math.floor(self._box_mid_x + x_rel_to_center/self._scale + 0.5)
+            cell_y = math.floor(self._box_mid_y + y_rel_to_center/self._scale + 0.5)
             print('Cell ({}, {})'.format(cell_x, cell_y))
             cell = (cell_x, cell_y)
             cells = self._game.getLiveCells()
@@ -280,8 +281,8 @@ class MainWindow(wxLifeUI.MainWindow):
         self._display_mid_y = disp_height / 2
         pixels = {}
         for cell_x, cell_y in self._game.getLiveCells():
-            x = int(self._display_mid_x + self._scale * (cell_x - self._box_mid_x + 0.5))
-            y = int(self._display_mid_y + self._scale * (cell_y - self._box_mid_y + 0.5))
+            x = math.floor(self._display_mid_x + self._scale * (cell_x - self._box_mid_x + 0.5))
+            y = math.floor(self._display_mid_y + self._scale * (cell_y - self._box_mid_y + 0.5))
 
             if self._scale <= 2:
                 if (x, y) in pixels:
@@ -289,7 +290,7 @@ class MainWindow(wxLifeUI.MainWindow):
                 else:
                     pixels[(x, y)] = 1
             else:
-                point = wx.Point(int(x - self._scale / 2 + 0.5), int(y - self._scale / 2 + 0.5))
+                point = wx.Point(math.floor(x - self._scale / 2 + 0.5), math.floor(y - self._scale / 2 + 0.5))
                 dc.DrawCircle(point, max(1, int(self._scale * 0.45)))
 
         if self._scale <= 2:
@@ -306,8 +307,8 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def _scaleRange(self, min_v, max_v, factor):
         mid = (max_v + min_v) / 2.0
-        new_min = int(mid - (mid - min_v) * factor - 0.5)
-        new_max = int(mid + (max_v - mid) * factor + 0.5)
+        new_min = math.floor(mid - (mid - min_v) * factor - 0.5)
+        new_max = math.floor(mid + (max_v - mid) * factor + 0.5)
 
         if new_min == min_v:
             new_min -= 1 if factor > 1 else -1
