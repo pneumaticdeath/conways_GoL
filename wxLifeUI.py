@@ -63,6 +63,9 @@ class MainWindow ( wx.Frame ):
         self.m_sim_random_fill = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Random Fill\tCtrl+F"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_random_fill )
 
+        self.m_sim_clear = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Clear board\tCtrl+X"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_sim_menu.Append( self.m_sim_clear )
+
         self.m_sim_continue = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Continue\tCtrl+C"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_continue )
         self.m_sim_continue.Enable( False )
@@ -118,6 +121,7 @@ class MainWindow ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.TakeSingleStep, id = self.m_sim_step.GetId() )
         self.Bind( wx.EVT_MENU, self.StepBack, id = self.m_sim_back.GetId() )
         self.Bind( wx.EVT_MENU, self.RandomFill, id = self.m_sim_random_fill.GetId() )
+        self.Bind( wx.EVT_MENU, self.OnClear, id = self.m_sim_clear.GetId() )
         self.Bind( wx.EVT_MENU, self.OnContinue, id = self.m_sim_continue.GetId() )
         self.Bind( wx.EVT_MENU, self.ToggleEditMode, id = self.m_sim_edit.GetId() )
         self.Bind( wx.EVT_MENU, self.OnFaster, id = self.m_sim_faster.GetId() )
@@ -156,6 +160,9 @@ class MainWindow ( wx.Frame ):
         event.Skip()
 
     def RandomFill( self, event ):
+        event.Skip()
+
+    def OnClear( self, event ):
         event.Skip()
 
     def OnContinue( self, event ):

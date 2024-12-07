@@ -78,6 +78,11 @@ class MainWindow(wxLifeUI.MainWindow):
         self.initializeGame(newCells)
         # self.saveFile(sys.stdout)
 
+    def OnClear(self, event):
+        self.initializeGame(set())
+        self._filename = ''
+        event.Skip()
+
     def RunSim(self, event=None):
         self._paused = False
         self.editMode(False)
@@ -134,7 +139,7 @@ class MainWindow(wxLifeUI.MainWindow):
                 self._stagnation += 1
                 if self._stagnation >= self._stagnation_window:
                     self._stagnated = True
-                    # self.setStatus('Stagnated at generation {}'.format(self._game.getGeneration() - self._stagnation))
+                    self.setStatus('Stagnated at generation {}'.format(self._game.getGeneration() - self._stagnation))
             else:
                 self._stagnation = 0
 
@@ -236,8 +241,8 @@ class MainWindow(wxLifeUI.MainWindow):
             x_rel_to_center = (event.x - self._display_mid_x)
             y_rel_to_center = (event.y - self._display_mid_y)
             print(f'Rel to center ({x_rel_to_center}, {y_rel_to_center})')
-            cell_x = math.floor(self._box_mid_x + x_rel_to_center/self._scale + 0.5)
-            cell_y = math.floor(self._box_mid_y + y_rel_to_center/self._scale + 0.5)
+            cell_x = math.floor(self._box_mid_x + x_rel_to_center / self._scale + 0.5)
+            cell_y = math.floor(self._box_mid_y + y_rel_to_center / self._scale + 0.5)
             print('Cell ({}, {})'.format(cell_x, cell_y))
             cell = (cell_x, cell_y)
             cells = self._game.getLiveCells()

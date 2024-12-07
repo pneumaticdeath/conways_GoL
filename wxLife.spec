@@ -5,7 +5,7 @@ a = Analysis(
     ['wxLife.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('examples', '.')],
     hiddenimports=['wx.lib.pubsub'],
     hookspath=[],
     hooksconfig={},
