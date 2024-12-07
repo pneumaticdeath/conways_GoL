@@ -233,15 +233,9 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def OnLeftClick(self, event):
         if self._edit_mode:
-            print(f'x: {event.x} y: {event.y}')
-            dc = wx.PaintDC(self.m_grid)
-            # print(type(event))
-            # print(dir(event))
-            pos = event.GetLogicalPosition(dc)
-            print(f'click pos {pos}')
-            print(f'Scale {self._scale} BoxMid ({self._box_mid_x}, {self._box_mid_y})')
-            x_rel_to_center = (pos.x - self._display_mid_x)
-            y_rel_to_center = (pos.y - self._display_mid_y)
+            print(f'Scale {self._scale} BoxMid ({self._box_mid_x}, {self._box_mid_y}) DispMid ({self._display_mid_x}, {self._display_mid_y})')
+            x_rel_to_center = (event.x - self._display_mid_x)
+            y_rel_to_center = (event.y - self._display_mid_y)
             print(f'Rel to center ({x_rel_to_center}, {y_rel_to_center})')
             cell_x = int(self._box_mid_x + x_rel_to_center/self._scale + 0.5)
             cell_y = int(self._box_mid_y + y_rel_to_center/self._scale + 0.5)
