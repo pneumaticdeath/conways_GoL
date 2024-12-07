@@ -35,10 +35,11 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['icon_512.icns'],
 )
 app = BUNDLE(
     exe,
     name='wxLife.app',
-    icon=None,
+    icon='icon_512.icns',
     bundle_identifier=None,
 )
