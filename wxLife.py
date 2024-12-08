@@ -49,7 +49,7 @@ class MainWindow(wxLifeUI.MainWindow):
             self._box_min_y = 0
             self._box_max_x = self._board_size[0] - 1
             self._box_max_y = self._board_size[1] - 1
-        self.OnContinue(paused=True)
+        self.clearStagnation()
         self.Refresh()
 
     def getBrush(self):
@@ -63,7 +63,7 @@ class MainWindow(wxLifeUI.MainWindow):
             return self._running_brush
 
     def RandomFill(self, event):
-        self.OnContinue(paused=True)
+        self.clearStagnation()
         self._filename = ''
         newCells = set()
         for y in range(self._board_size[1]):
@@ -108,6 +108,7 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def StepBack(self, event=None):
         self.PauseSim()
+        self.clearStagnation()
         if not self._game.backwardsStep():
             self.setStatus('Can\'t go back any further')
         self.Refresh()
@@ -141,14 +142,14 @@ class MainWindow(wxLifeUI.MainWindow):
             self.PauseSim()
             self.m_sim_continue.Enable(True)
 
-    def OnContinue(self, event=None, paused=False):
+    def OnContinue(self, event=None):
+        self.clearStagnation()
+        self.RunSim()
+
+    def clearStagnation(self):
         self._stagnated = False
         self._stagnation = 0
         self.m_sim_continue.Enable(False)
-        if paused:
-            self.PauseSim()
-        else:
-            self.RunSim()
 
     def OnFaster(self, event):
         self._delay_time_ms = max(self._delay_time_ms / self._speed_factor, 1)
@@ -176,7 +177,8 @@ class MainWindow(wxLifeUI.MainWindow):
             self._box_max_y = max_y
 
     def OnOpen(self, event):
-        self.OnContinue(paused=True)
+        self.PauseSim()
+        self.clearStagnation()
         fod = wx.FileDialog(self, "Choose a Life file",
                             self._directory, '', '*.life', wx.FD_OPEN)
         if fod.ShowModal() == wx.ID_OK:
