@@ -1,0 +1,17 @@
+# This is an example of false stagnation,
+# where the heuristic assumes stagnation long
+# before the simulation actually reaces a
+# steady state.
+    * * 
+   *   *
+ * * * *
+*  *   *
+ *  *   *
+*  *   **
+ **** * ****
+    **   *  *
+    *   *  *
+     *   *  *
+     * * * *
+     *   *
+      * * 
