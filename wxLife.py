@@ -24,7 +24,6 @@ class MainWindow(wxLifeUI.MainWindow):
         self._single_step = False
         self._stagnated = False
         self._stagnation = 0
-        self._stagnation_count = 0
         self._stagnation_window = 10
         self._similarity_threshold = 0.95
         self._background = wx.Brush('black')
