@@ -34,20 +34,15 @@ class MainWindow(wxLifeUI.MainWindow):
         self._edit_brush = wx.Brush('yellow')
         self._directory = 'examples'
         self._filename = ''
-        # self._box_min_x = 0
-        # self._box_min_y = 0
-        # self._box_max_x = self._board_size[0] - 1
-        # self._box_max_y = self._board_size[1] - 1
+        self._timer = wx.Timer()
         self.initializeGame(set())
         self.m_grid.Bind(wx.EVT_LEFT_DOWN, self.OnLeftClick)
         self.m_grid.Bind(wx.EVT_PAINT, self.OnPaint)
-        self._timer = wx.Timer()
         self._timer.Bind(wx.EVT_TIMER, self.OnTimer)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.m_grid.Bind(wx.EVT_KEY_DOWN, self.OnKeypress)
 
     def initializeGame(self, cells):
-        # self.OnContinue(paused=True)
         self._game = life.Life(cells)
         self._box_min_x, self._box_min_y, self._box_max_x, self._box_max_y = self._game.getBoundingBox()
         if self._box_min_x is None:
@@ -55,6 +50,7 @@ class MainWindow(wxLifeUI.MainWindow):
             self._box_min_y = 0
             self._box_max_x = self._board_size[0] - 1
             self._box_max_y = self._board_size[1] - 1
+        self.OnContinue(paused=True)
         self.Refresh()
 
     def getBrush(self):
@@ -76,11 +72,10 @@ class MainWindow(wxLifeUI.MainWindow):
                 if random.uniform(0, 100) < self._fill_factor:
                     newCells.add((x, y))
         self.initializeGame(newCells)
-        # self.saveFile(sys.stdout)
 
     def OnClear(self, event):
-        self.initializeGame(set())
         self._filename = ''
+        self.initializeGame(set())
         event.Skip()
 
     def RunSim(self, event=None):
@@ -310,8 +305,8 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def _scaleRange(self, min_v, max_v, factor):
         mid = (max_v + min_v) / 2.0
-        new_min = math.floor(mid - (mid - min_v) * factor - 0.5)
-        new_max = math.floor(mid + (max_v - mid) * factor + 0.5)
+        new_min = math.floor(mid - (mid - min_v) * factor)
+        new_max = math.ceil(mid + (max_v - mid) * factor)
 
         if new_min == min_v:
             new_min -= 1 if factor > 1 else -1
