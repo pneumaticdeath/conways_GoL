@@ -16,7 +16,7 @@ be used to construct a traditional computer.
 The three versions I have are:
 * life.py     -- a strictly text based command line implemntation
 * pyg_life.py -- an implenation using the _pygame_ SDL graphics library
-* wxLife.py   -- a full GUI application build using _wxPython_
+* wxLife.py   -- a full GUI application built using _wxPython_
 
 All three should run on Windows, MacOS and Linux, though I haven't tested 
 them on Windows myself.
