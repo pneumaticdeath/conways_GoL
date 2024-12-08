@@ -80,6 +80,8 @@ class MainWindow(wxLifeUI.MainWindow):
     def RunSim(self, event=None):
         self._paused = False
         self.editMode(False)
+        if self._stagnated:
+            self.clearStagnation()
         self._timer.Start(int(self._delay_time_ms))
         self.m_sim_run.Enable(False)
         self.m_sim_pause.Enable(True)
@@ -140,16 +142,10 @@ class MainWindow(wxLifeUI.MainWindow):
 
         if self._stagnated:
             self.PauseSim()
-            self.m_sim_continue.Enable(True)
-
-    def OnContinue(self, event=None):
-        self.clearStagnation()
-        self.RunSim()
 
     def clearStagnation(self):
         self._stagnated = False
         self._stagnation = 0
-        self.m_sim_continue.Enable(False)
 
     def OnFaster(self, event):
         self._delay_time_ms = max(self._delay_time_ms / self._speed_factor, 1)
