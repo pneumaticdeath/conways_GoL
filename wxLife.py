@@ -16,7 +16,6 @@ class MainWindow(wxLifeUI.MainWindow):
     def __init__(self, parent):
         wxLifeUI.MainWindow.__init__(self, parent)
         self._paused = True
-        self._edit_mode = False
         self._board_size = (20, 20)
         self._fill_factor = 40
         self._delay_time_ms = 100
@@ -52,7 +51,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self.Refresh()
 
     def getBrush(self):
-        if self._edit_mode:
+        if self.m_sim_edit.IsChecked():
             return self._edit_brush
         elif self._stagnated:
             return self._stagnated_brush
@@ -227,7 +226,7 @@ class MainWindow(wxLifeUI.MainWindow):
                 out.write('\n')
 
     def OnLeftClick(self, event):
-        if self._edit_mode:
+        if self.m_sim_edit.IsChecked():
             print(f'Scale {self._scale} BoxMid ({self._box_mid_x}, {self._box_mid_y}) DispMid ({self._display_mid_x}, {self._display_mid_y})')
             x_rel_to_center = (event.x - self._display_mid_x)
             y_rel_to_center = (event.y - self._display_mid_y)
@@ -340,18 +339,22 @@ class MainWindow(wxLifeUI.MainWindow):
             self.Refresh()
 
     def ToggleEditMode(self, event):
-        self.editMode(not self._edit_mode)
+        if self.m_sim_edit.IsChecked():
+            self.PauseSim()
+            self.setStatus('Edit Mode')
+        else:
+            self.setStatus('Leaving Edit Mode')
+        self.Refresh()
 
     def editMode(self, mode):
-        if mode != self._edit_mode:
-            self._edit_mode = mode
+        if mode != self.m_sim_edit.IsChecked():
             self.m_sim_edit.Check(mode)
             if mode:
                 self.PauseSim()
                 self.setStatus('Edit Mode')
             else:
                 self.setStatus('Leaving Edit Mode')
-                self.Refresh()
+            self.Refresh()
 
     def OnClose(self, event):
         self._timer.Stop()

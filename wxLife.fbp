@@ -125,7 +125,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">Settings	Ctrl+A</property>
+            <property name="label">Settings	Ctrl+;</property>
             <property name="name">m_file_settings</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>
@@ -260,7 +260,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_CHECK</property>
-            <property name="label">Auto Stagnation</property>
+            <property name="label">Auto Stagnation	Ctrl+A</property>
             <property name="name">m_sim_stagnation</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>

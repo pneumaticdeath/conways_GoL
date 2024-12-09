@@ -36,7 +36,7 @@ class MainWindow ( wx.Frame ):
 
         self.m_file_menu.AppendSeparator()
 
-        self.m_file_settings = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Settings\tCtrl+A"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_file_settings = wx.MenuItem( self.m_file_menu, wx.ID_ANY, _(u"Settings\tCtrl+;"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_file_menu.Append( self.m_file_settings )
 
         self.m_file_menu.AppendSeparator()
@@ -69,7 +69,7 @@ class MainWindow ( wx.Frame ):
         self.m_sim_edit = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Edit Mode\tCtrl+E"), wx.EmptyString, wx.ITEM_CHECK )
         self.m_sim_menu.Append( self.m_sim_edit )
 
-        self.m_sim_stagnation = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Auto Stagnation"), wx.EmptyString, wx.ITEM_CHECK )
+        self.m_sim_stagnation = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Auto Stagnation\tCtrl+A"), wx.EmptyString, wx.ITEM_CHECK )
         self.m_sim_menu.Append( self.m_sim_stagnation )
         self.m_sim_stagnation.Check( True )
 
@@ -169,7 +169,6 @@ class MainWindow ( wx.Frame ):
         event.Skip()
 
     def ToggleStagnation( self, event ):
-        raise NotImplementedError()
         event.Skip()
 
     def OnFaster( self, event ):
