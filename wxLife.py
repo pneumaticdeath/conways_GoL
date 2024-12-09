@@ -118,7 +118,7 @@ class MainWindow(wxLifeUI.MainWindow):
     def checkStagnation(self):
         stagnating = False
         curr_cells = self._game.getLiveCells()
-        if not self._stagnated and self._stagnation_window > 0:
+        if not self._stagnated and self.m_sim_stagnation.IsChecked():
             if len(curr_cells) == len(self._game.getHistory()[-1]):
                 stagnating = True
                 self.setStatus('Stagnating on population at generation {}'.format(self._game.getGeneration()))
@@ -336,6 +336,9 @@ class MainWindow(wxLifeUI.MainWindow):
         if self._auto_zoom:
             self.AutoZoom()
             self.Refresh()
+
+    def ToggleStagnation(self, event):
+        self.m_sim_stagnation.Check(self.m_sim_stagnation.IsChecked())
 
     def ToggleEditMode(self, event):
         self.editMode(not self._edit_mode)

@@ -69,6 +69,10 @@ class MainWindow ( wx.Frame ):
         self.m_sim_edit = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Edit Mode\tCtrl+E"), wx.EmptyString, wx.ITEM_CHECK )
         self.m_sim_menu.Append( self.m_sim_edit )
 
+        self.m_sim_stagnation = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Auto Stagnation"), wx.EmptyString, wx.ITEM_CHECK )
+        self.m_sim_menu.Append( self.m_sim_stagnation )
+        self.m_sim_stagnation.Check( True )
+
         self.m_sim_menu.AppendSeparator()
 
         self.m_sim_faster = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Faster\tCtrl++"), wx.EmptyString, wx.ITEM_NORMAL )
@@ -119,6 +123,7 @@ class MainWindow ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.RandomFill, id = self.m_sim_random_fill.GetId() )
         self.Bind( wx.EVT_MENU, self.OnClear, id = self.m_sim_clear.GetId() )
         self.Bind( wx.EVT_MENU, self.ToggleEditMode, id = self.m_sim_edit.GetId() )
+        self.Bind( wx.EVT_MENU, self.ToggleStagnation, id = self.m_sim_stagnation.GetId() )
         self.Bind( wx.EVT_MENU, self.OnFaster, id = self.m_sim_faster.GetId() )
         self.Bind( wx.EVT_MENU, self.OnSlower, id = self.m_sim_slower.GetId() )
         self.Bind( wx.EVT_MENU, self.ToggleZoomAuto, id = self.m_zoom_auto.GetId() )
@@ -161,6 +166,10 @@ class MainWindow ( wx.Frame ):
         event.Skip()
 
     def ToggleEditMode( self, event ):
+        event.Skip()
+
+    def ToggleStagnation( self, event ):
+        raise NotImplementedError()
         event.Skip()
 
     def OnFaster( self, event ):
