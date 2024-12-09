@@ -16,7 +16,6 @@ class MainWindow(wxLifeUI.MainWindow):
     def __init__(self, parent):
         wxLifeUI.MainWindow.__init__(self, parent)
         self._paused = True
-        self._auto_zoom = True
         self._edit_mode = False
         self._board_size = (20, 20)
         self._fill_factor = 40
@@ -103,7 +102,7 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def takeStep(self):
         self._game.step()
-        if self._auto_zoom:
+        if self.m_zoom_auto.IsChecked():
             self.AutoZoom()
         self.checkStagnation()
         self.Refresh()
@@ -322,18 +321,15 @@ class MainWindow(wxLifeUI.MainWindow):
         self.Refresh()
 
     def ZoomIn(self, event=None):
-        self._auto_zoom = False
         self.m_zoom_auto.Check(False)
         self.zoom(1 / self._zoom_factor)
 
     def ZoomOut(self, event=None):
-        self._auto_zoom = False
         self.m_zoom_auto.Check(False)
         self.zoom(self._zoom_factor)
 
     def ToggleZoomAuto(self, event):
-        self._auto_zoom = not self._auto_zoom
-        if self._auto_zoom:
+        if self.m_zoom_auto.IsChecked():
             self.AutoZoom()
             self.Refresh()
 
