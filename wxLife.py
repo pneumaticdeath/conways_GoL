@@ -338,7 +338,10 @@ class MainWindow(wxLifeUI.MainWindow):
             self.Refresh()
 
     def ToggleStagnation(self, event):
-        self.m_sim_stagnation.Check(self.m_sim_stagnation.IsChecked())
+        # The checked flag has already been toggled at this point
+        if not self.m_sim_stagnation.IsChecked():
+            self.clearStagnation()
+            self.Refresh()
 
     def ToggleEditMode(self, event):
         self.editMode(not self._edit_mode)
