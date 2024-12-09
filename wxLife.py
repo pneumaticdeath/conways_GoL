@@ -27,7 +27,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self._stagnation_window = 10
         self._similarity_threshold = 0.95
         self._background = wx.Brush('black')
-        self._paused_brush = wx.Brush('blue')
+        self._paused_brush = wx.Brush(wx.Colour(31, 31, 255))
         self._running_brush = wx.Brush('green')
         self._stagnated_brush = wx.Brush('red')
         self._edit_brush = wx.Brush('yellow')
