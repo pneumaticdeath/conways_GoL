@@ -248,7 +248,6 @@ class MainWindow(wxLifeUI.MainWindow):
                 groups = match.groups()
                 base_x = int(groups[0])
                 base_y = int(groups[1])
-                print(f'base ({base_x, base_y})')
                 continue
             else:
                 for c in line:
@@ -262,7 +261,6 @@ class MainWindow(wxLifeUI.MainWindow):
                             count_str = ''
                         else:
                             count = 1
-                        print(f'Count {count} of {c}')
                         if c == 'o':
                             for i in range(count):
                                 newCells.add((base_x + x + i, base_y + y))
@@ -275,6 +273,8 @@ class MainWindow(wxLifeUI.MainWindow):
                     elif c == '!':
                         done = True
                         break
+                    else:
+                        print(f'Unknown tag "{c}"')
             if done:
                 break
         if not done:
@@ -291,10 +291,10 @@ class MainWindow(wxLifeUI.MainWindow):
                 save_filename += '.life'
             self._directory = save_dialog.GetDirectory()
             with open(os.path.join(self._directory, save_filename), 'w') as f:
-                self.saveFile(f)
+                self.saveLifeFile(f)
         save_dialog.Destroy()
 
-    def saveFile(self, out):
+    def saveLifeFile(self, out):
         min_x, min_y, max_x, max_y = self._game.getBoundingBox()
         if self._filename:
             out.write('# Loaded from "{}"\n'.format(self._filename))
