@@ -3,6 +3,7 @@
 import life
 import math
 import os
+import re
 import random
 import wx
 import wxLifeUI
@@ -174,15 +175,25 @@ class MainWindow(wxLifeUI.MainWindow):
         self.PauseSim()
         self.clearStagnation()
         fod = wx.FileDialog(self, "Choose a Life file",
-                            self._directory, '', '*.life', wx.FD_OPEN)
+                            self._directory, '', '*', wx.FD_OPEN)
         if fod.ShowModal() == wx.ID_OK:
             self._filename = fod.GetFilename()
             self._directory = fod.GetDirectory()
             with open(os.path.join(self._directory, self._filename), 'r') as f:
-                self.loadFile(f.readlines())
+                if self._filename.lower().endswith('.life'):
+                    self.setStatus('Loading life file')
+                    self.loadLifeFile(f.readlines())
+                elif self._filename.lower().endswith('.rle') or self._filename.lower().endswith('.rle.txt'):
+                    self.setStatus('Loading RLE file')
+                    self.loadRLEFile(f.readlines())
+                elif self._filename.lower().endswith('.txt'):
+                    self.setStatus('Loading txt file')
+                    self.loadTxtFile(f.readlines())
+                else:
+                    self.setStatus('Unknown file type')
         fod.Destroy()
 
-    def loadFile(self, lines):
+    def loadLifeFile(self, lines):
         newCells = set()
         y = 0
         for line in lines:
@@ -194,6 +205,80 @@ class MainWindow(wxLifeUI.MainWindow):
                     newCells.add((x, y))
                 x += 1
             y += 1
+        self.initializeGame(newCells)
+
+    def loadTxtFile(self, lines):
+        newCells = set()
+        y = 0
+        for line in lines:
+            if line.startswith('!'):
+                continue
+            x = 0
+            for c in line:
+                if c == '!':
+                    break
+                elif c == 'O':
+                    newCells.add((x, y))
+                elif c == '.':
+                    pass
+                elif c.isspace():
+                    pass
+                else:
+                    print(f'Unknown character "{c}"')
+                x += 1
+            y += 1
+        self.initializeGame(newCells)
+
+    def loadRLEFile(self, lines):
+        newCells = set()
+        y = 0
+        x = 0
+        base_y = 0
+        base_x = 0
+        count_str = ''
+        done = False
+        for line in lines:
+            if line.startswith('#'):
+                continue
+            elif line.lstrip().startswith('x'):
+                match = re.search(r'x *= *([0-9]+), *y *= *([0-9]+)', line)
+                if not match:
+                    print(f'Unable to parse header line "{line.strip()}"')
+                    continue
+                groups = match.groups()
+                base_x = int(groups[0])
+                base_y = int(groups[1])
+                print(f'base ({base_x, base_y})')
+                continue
+            else:
+                for c in line:
+                    if c.isdigit():
+                        count_str += c
+                    elif c.isspace():
+                        pass
+                    elif c in ['o', 'b', '$']:
+                        if count_str != '':
+                            count = int(count_str)
+                            count_str = ''
+                        else:
+                            count = 1
+                        print(f'Count {count} of {c}')
+                        if c == 'o':
+                            for i in range(count):
+                                newCells.add((base_x + x + i, base_y + y))
+                            x += count
+                        elif c == 'b':
+                            x += count
+                        elif c == '$':
+                            x = 0
+                            y += count
+                    elif c == '!':
+                        done = True
+                        break
+            if done:
+                break
+        if not done:
+            print('Did not find terminator')
         self.initializeGame(newCells)
 
     def OnSave(self, event):
