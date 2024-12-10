@@ -233,8 +233,9 @@ class MainWindow(wxLifeUI.MainWindow):
         newCells = set()
         y = 0
         x = 0
-        base_y = 0
-        base_x = 0
+        size_y = 0
+        size_x = 0
+        max_x = None
         count_str = ''
         done = False
         for line in lines:
@@ -246,8 +247,8 @@ class MainWindow(wxLifeUI.MainWindow):
                     print(f'Unable to parse header line "{line.strip()}"')
                     continue
                 groups = match.groups()
-                base_x = int(groups[0])
-                base_y = int(groups[1])
+                size_x = int(groups[0])
+                size_y = int(groups[1])
                 continue
             else:
                 for c in line:
@@ -263,14 +264,17 @@ class MainWindow(wxLifeUI.MainWindow):
                             count = 1
                         if c == 'o':
                             for i in range(count):
-                                newCells.add((base_x + x + i, base_y + y))
+                                newCells.add((x + i, y))
                             x += count
                         elif c == 'b':
                             x += count
                         elif c == '$':
+                            if max_x is None or x > max_x:
+                                max_x = x
                             x = 0
                             y += count
                     elif c == '!':
+                        y += 1
                         done = True
                         break
                     else:
@@ -279,6 +283,8 @@ class MainWindow(wxLifeUI.MainWindow):
                 break
         if not done:
             print('Did not find terminator')
+        if max_x != size_x or y != size_y:
+            print(f'Got pattern of {max_x}x{y} but expected {size_x}x{size_y}')
         self.initializeGame(newCells)
 
     def OnSave(self, event):
