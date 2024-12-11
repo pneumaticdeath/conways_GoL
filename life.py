@@ -251,6 +251,8 @@ class Life(object):
                 break
         if not done:
             print('Did not find terminator')
+        if x > max_x:
+            max_x = x
         if max_x != size_x or y != size_y:
             print(f'Got pattern of {max_x}x{y} but expected {size_x}x{size_y}')
         self._meta['headers'] = headers
@@ -378,7 +380,7 @@ class Life(object):
                             syms_rle.append((last_sym, sym_count))
                         last_sym = sym
                         sym_count = 1
-                if syms_rle[-1][0] == '$' and last_sym == 'b':
+                if syms_rle and syms_rle[-1][0] == '$' and last_sym == 'b':
                     syms_rle[-1] = ('$', syms_rle[-1][1] + 1)
                     sym_count = 0
                     last_sym = '$'
