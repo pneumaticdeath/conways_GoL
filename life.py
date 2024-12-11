@@ -331,7 +331,7 @@ class Life(object):
                     f.write('\n')
         return True
 
-    def saveRLEFile(self, filename, max_line_length=80):
+    def saveRLEFile(self, filename, max_line_length=79):
         min_x, min_y, max_x, max_y = self.getBoundingBox()
         if not filename.endswith('.rle') and not filename.endswith('.rle.txt'):
             filename += '.rle.txt'
@@ -378,8 +378,10 @@ class Life(object):
                             syms_rle.append((last_sym, sym_count))
                         last_sym = sym
                         sym_count = 1
-                if last_sym == '$':
-                    sym_count += 1
+                if syms_rle[-1][0] == '$' and last_sym == 'b':
+                    syms_rle[-1] = ('$', syms_rle[-1][1] + 1)
+                    sym_count = 0
+                    last_sym = '$'
                 else:
                     if last_sym == 'o':
                         syms_rle.append((last_sym, sym_count))
