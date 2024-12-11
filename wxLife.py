@@ -76,6 +76,7 @@ class MainWindow(wxLifeUI.MainWindow):
     def OnClear(self, event):
         self._filename = ''
         self._game.clear()
+        self.Refresh()
         event.Skip()
 
     def RunSim(self, event=None):

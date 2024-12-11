@@ -93,7 +93,7 @@ class Life(object):
                 self.loadLifeFile(f.readlines())
             elif filename.lower().endswith('.rle') or filename.lower().endswith('.rle.txt'):
                 self.loadRLEFile(f.readlines())
-            elif filename.lower().endswith('.cells') or filename.lower().endsiwth('.cells.txt'):
+            elif filename.lower().endswith('.cells') or filename.lower().endswith('.cells.txt'):
                 self.loadCellsFile(f.readlines())
             else:
                 raise TypeError('Unknown filetype')
