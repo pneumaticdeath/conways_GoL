@@ -59,26 +59,17 @@ except Exception:
     parser.usage()
     sys.exit(1)
 
-initial_cells = set()
+game = life.Life()
 if args.load is None:
+    initial_cells = set()
     for y in range(args.height):
         for x in range(args.width):
             if random.uniform(0, 100) < args.fill:
                 initial_cells.add((x, y))
+    game.addLiveCells(initial_cells)
 else:
-    with open(args.load, "r") as f:
-        y = 0
-        for line in f:
-            x = 0
-            for c in line:
-                if c == '#':  # we've hit a comment
-                    break
-                elif not c.isspace():
-                    initial_cells.add((x, y))
-                x += 1
-            y += 1
+    game.load(args.load)
 
-game = life.Life(initial_cells)
 last_frame_time = time.time()
 
 bounding_min_x, bounding_min_y, bounding_max_x, bounding_max_y = game.getBoundingBox()

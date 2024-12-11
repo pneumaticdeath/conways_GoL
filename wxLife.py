@@ -3,7 +3,6 @@
 import life
 import math
 import os
-import re
 import random
 import wx
 import wxLifeUI
@@ -41,14 +40,17 @@ class MainWindow(wxLifeUI.MainWindow):
         self.m_grid.Bind(wx.EVT_KEY_DOWN, self.OnKeypress)
 
     def initializeGame(self, cells):
+        self.clearStagnation()
         self._game = life.Life(cells)
+        self.resetDisplayBox()
+
+    def resetDisplayBox(self):
         self._box_min_x, self._box_min_y, self._box_max_x, self._box_max_y = self._game.getBoundingBox()
         if self._box_min_x is None:
             self._box_min_x = 0
             self._box_min_y = 0
             self._box_max_x = self._board_size[0] - 1
             self._box_max_y = self._board_size[1] - 1
-        self.clearStagnation()
         self.Refresh()
 
     def getBrush(self):
@@ -73,7 +75,7 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def OnClear(self, event):
         self._filename = ''
-        self.initializeGame(set())
+        self._game.clear()
         event.Skip()
 
     def RunSim(self, event=None):
@@ -179,113 +181,9 @@ class MainWindow(wxLifeUI.MainWindow):
         if fod.ShowModal() == wx.ID_OK:
             self._filename = fod.GetFilename()
             self._directory = fod.GetDirectory()
-            with open(os.path.join(self._directory, self._filename), 'r') as f:
-                if self._filename.lower().endswith('.life'):
-                    self.setStatus('Loading life file')
-                    self.loadLifeFile(f.readlines())
-                elif self._filename.lower().endswith('.rle') or self._filename.lower().endswith('.rle.txt'):
-                    self.setStatus('Loading RLE file')
-                    self.loadRLEFile(f.readlines())
-                elif self._filename.lower().endswith('.txt'):
-                    self.setStatus('Loading txt file')
-                    self.loadTxtFile(f.readlines())
-                else:
-                    self.setStatus('Unknown file type')
+            self._game.load(os.path.join(self._directory, self._filename))
+            self.resetDisplayBox()
         fod.Destroy()
-
-    def loadLifeFile(self, lines):
-        newCells = set()
-        y = 0
-        for line in lines:
-            x = 0
-            for c in line:
-                if c == "#":
-                    break
-                elif not c.isspace():
-                    newCells.add((x, y))
-                x += 1
-            y += 1
-        self.initializeGame(newCells)
-
-    def loadTxtFile(self, lines):
-        newCells = set()
-        y = 0
-        for line in lines:
-            if line.startswith('!'):
-                continue
-            x = 0
-            for c in line:
-                if c == '!':
-                    break
-                elif c == 'O':
-                    newCells.add((x, y))
-                elif c == '.':
-                    pass
-                elif c.isspace():
-                    pass
-                else:
-                    print(f'Unknown character "{c}"')
-                x += 1
-            y += 1
-        self.initializeGame(newCells)
-
-    def loadRLEFile(self, lines):
-        newCells = set()
-        y = 0
-        x = 0
-        size_y = 0
-        size_x = 0
-        max_x = None
-        count_str = ''
-        done = False
-        for line in lines:
-            if line.startswith('#'):
-                continue
-            elif line.lstrip().startswith('x'):
-                match = re.search(r'x *= *([0-9]+), *y *= *([0-9]+)', line)
-                if not match:
-                    print(f'Unable to parse header line "{line.strip()}"')
-                    continue
-                groups = match.groups()
-                size_x = int(groups[0])
-                size_y = int(groups[1])
-                continue
-            else:
-                for c in line:
-                    if c.isdigit():
-                        count_str += c
-                    elif c.isspace():
-                        pass
-                    elif c in ['o', 'b', '$']:
-                        if count_str != '':
-                            count = int(count_str)
-                            count_str = ''
-                        else:
-                            count = 1
-                        if c == 'o':
-                            for i in range(count):
-                                newCells.add((x + i, y))
-                            x += count
-                        elif c == 'b':
-                            x += count
-                        elif c == '$':
-                            if max_x is None or x > max_x:
-                                max_x = x
-                            x = 0
-                            y += count
-                    elif c == '!':
-                        y += 1
-                        done = True
-                        break
-                    else:
-                        print(f'Unknown tag "{c}"')
-            if done:
-                break
-        if not done:
-            print('Did not find terminator')
-        if max_x != size_x or y != size_y:
-            print(f'Got pattern of {max_x}x{y} but expected {size_x}x{size_y}')
-        self.initializeGame(newCells)
 
     def OnSave(self, event):
         self.PauseSim()
