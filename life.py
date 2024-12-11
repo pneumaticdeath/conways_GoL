@@ -30,11 +30,30 @@ class Life(object):
             if key in self._meta:
                 del self._meta[key]
 
+    def addHeader(self, header):
+        if 'headers' not in self._meta:
+            self._meta['headers'] = []
+        self._meta['headers'].append(header)
+
+    def getHeaders(self):
+        return self._meta.get('headers', [])
+
     def getMetaData(self, key=None, default=None):
         if key is not None:
             return self._meta.get(key, default)
         else:
             return self._meta
+
+    def addComment(self, comment):
+        if 'comments' not in self._meta:
+            self._meta['comments'] = []
+        self._meta['comments'].append(comment)
+
+    def clearComments(self):
+        self._meta['comments'] = []
+
+    def getComments(self):
+        return self._meta.get('comments', [])
 
     def addLiveCells(self, cells):
         for cell in cells:
@@ -245,25 +264,28 @@ class Life(object):
         if not filename.endswith('.life') and not filename.endswith('.life.txt'):
             filename += '.life.txt'
         with open(filename, 'w') as f:
-            if 'headers' in self._meta:
-                for header in self._meta['headers']:
-                    if header.startswith('#'):
-                        f.write(header)
-                    else:
-                        f.write('#')
-                        f.write(header[1:])
-                    if not header.endswith('\n'):
-                        f.write('\n')
-
             if 'filename' in self._meta:
                 f.write(f'# Loaded from "{self._meta['filename']}"\n')
-            if 'height' in self._meta and 'width' in self._meta:
+            elif 'height' in self._meta and 'width' in self._meta:
                 f.write(f'# Height: {self._meta['height']}   Width: {self._meta['width']}')
                 if 'fill' in self._meta:
                     f.write(f'   Fill: {self._meta['fill']}')
                 f.write('\n')
             f.write(f'# Generation {self.getGeneration()}\n')
             f.write(f'# Bounding Box ({min_x}, {min_y}) -> ({max_x}, {max_y})\n')
+            for comment in self.getComments():
+                if comment.startswith('#'):
+                    f.write(comment)
+                else:
+                    f.write('# ')
+                    if comment.startswith('!'):
+                        f.write(comment[1:])
+                    else:
+                        f.write(comment)
+
+                if not comment.endswith('\n'):
+                    f.write('\n')
+
             cells = self.getLiveCells()
             if min_y is not None:
                 for y in range(min_y, max_y + 1):
@@ -281,15 +303,17 @@ class Life(object):
                 f.write(f'! {self._meta['filename']}\n')
             if 'author' in self._meta:
                 f.write(f'! \'{self._meta['author']}\'\n')
-            if 'headers' in self._meta:
-                for header in self._meta['headers']:
-                    if header.startswith('!'):
-                        f.write(header)
+            for comment in self.getComments():
+                if comment.startswith('!'):
+                    f.write(comment)
+                else:
+                    f.write('!')
+                    if comment.startswith('#'):
+                        f.write(comment[1:])
                     else:
-                        f.write('!')
-                        f.write(header[1:])
-                    if not header.endswith('\n'):
-                        f.write('\n')
+                        f.write(comment)
+                if not comment.endswith('\n'):
+                    f.write('\n')
             cells = self.getLiveCells()
             if min_y is not None:
                 for y in range(min_y, max_y + 1):
@@ -338,7 +362,6 @@ class Life(object):
                 if last_sym != '$':
                     syms_rle.append((last_sym, sym_count))
                 syms_rle.append(('!', 1))
-            print(syms_rle)
             line = ''
             for sym, sym_count in syms_rle:
                 if sym_count > 1:

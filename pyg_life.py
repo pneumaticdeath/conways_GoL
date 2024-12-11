@@ -19,6 +19,8 @@ parser.add_argument('--fill', type=int, default=40,
                     help='Percentage fill of initial field')
 parser.add_argument('--load', default=None,
                     help='Optional file for initial pattern')
+parser.add_argument('--dumpformat', default='rle',
+                    help='One of rle, cells, or life')
 parser.add_argument('--window', default='800x600',
                     help='Dimensions of window')
 parser.add_argument('--fullscreen', action='store_true',
@@ -178,22 +180,29 @@ def zoom(factor):
 
 
 def dump():
-    filename = time.strftime('dump_%Y%m%d-%H%M%S.life')
+    filename = time.strftime('dump_%Y%m%d-%H%M%S')
+    if args.dumpformat == 'life':
+        format = life.FMT_LIFE
+    elif args.dumpformat == 'cells':
+        format = life.FMT_CELLS
+    elif args.dumpformat == 'rle':
+        format = life.FMT_RLE
+    else:
+        print(f'Unknown dump format {args.dumpformat}, defaulting to rle')
+        format = life.FMT_RLE
+
     print('Dumping to {}'.format(filename))
-    with open(filename, 'w') as outfile:
-        if args.load:
-            outfile.write('# Loaded from "{}"\n'.format(args.load))
-        else:
-            outfile.write('# Height: {}   Width: {}   Fill: {}\n'.format(args.height, args.width, args.fill))
-            outfile.write('# Random Seed: {}\n'.format(rand_seed))
-        outfile.write('# Generation: {}   Stagnation: {}\n'.format(game.getGeneration(), args.stagnation))
-        mix_x, min_y, max_x, max_y = game.getBoundingBox()
-        outfile.write('# Bounding box ({}, {}) -> ({}, {})\n'.format(mix_x, min_y, max_x, max_y))
-        cells = game.getLiveCells()
-        for y in range(min_y, max_y + 1):
-            for x in range(min_x, max_x + 1):
-                outfile.write('*' if (x, y) in cells else ' ')
-            outfile.write('\n')
+    mix_x, min_y, max_x, max_y = game.getBoundingBox()
+
+    # game.setMetaData('width', max_x - min_x + 1)
+    # game.setMetaData('height', max_y - min_y + 1)
+    if game.getMetaData('filename') is None and args.load:
+        game.setMetaData('filename'. args.load)
+    elif game.getMetaData('fill') is None:
+        game.setMetaData('fill', args.fill)
+        game.setMetaData('seed', rand_seed)
+        game.addComment(f'Random Seed: {rand_seed}')
+    game.save(filename, format)
 
 
 while True:
