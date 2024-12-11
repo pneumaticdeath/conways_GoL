@@ -197,17 +197,26 @@ class Life(object):
         count_str = ''
         done = False
         for line in lines:
-            if line.startswith('#'):
-                headers.append(line)
+            if line.startswith('#N'):
+                self._meta['description'] = line[2:]
+                continue
+            elif line.startswith('#O'):
+                self._meta['author'] = line[2:]
+                continue
+            elif line.startswith('#C'):
+                self.addComment(line[2:])
+                continue
+            elif line.startswith('#'):
+                headers.append(line[1:])
                 continue
             elif line.lstrip().startswith('x'):
                 match = re.search(r'x *= *([0-9]+), *y *= *([0-9]+)', line)
                 if not match:
                     print(f'Unable to parse header line "{line.strip()}"')
-                    continue
-                groups = match.groups()
-                size_x = int(groups[0])
-                size_y = int(groups[1])
+                else:
+                    groups = match.groups()
+                    size_x = int(groups[0])
+                    size_y = int(groups[1])
                 continue
             else:
                 for c in line:
@@ -327,15 +336,33 @@ class Life(object):
         if not filename.endswith('.rle') and not filename.endswith('.rle.txt'):
             filename += '.rle.txt'
         with open(filename, 'w') as f:
-            if 'headers' in self._meta:
-                for header in self._meta['headers']:
-                    if header.startswith('#'):
-                        f.write(header)
+            if 'description' in self._meta:
+                if self._meta['description'].startswith('#N'):
+                    f.write(self._meta['description'])
+                else:
+                    f.write(f'#N{self._meta['description']}')
+                if not self._meta['description'].endswith('\n'):
+                    f.write('\n')
+            if 'author' in self._meta:
+                if self._meta['author'].startswith('#O'):
+                    f.write(self._meta['author'])
+                else:
+                    f.write(f'#O{self._meta['author']}')
+                if not self._meta['author'].endswith('\n'):
+                    f.write('\n')
+            for comment in self.getComments():
+                if comment.startswith('#C'):
+                    f.write(comment)
+                else:
+                    f.write('#C')
+                    if comment.startswith('!'):
+                        f.write(comment[1:])
                     else:
-                        f.write('#C')
-                        f.write(header[1:])
-                    if not header.endswith('\n'):
-                        f.write('\n')
+                        f.write(comment)
+                if not comment.endswith('\n'):
+                    f.write('\n')
+            if 'filename' in self._meta:
+                f.write(f'#C originally loaded from {self._meta['filename']}\n')
             f.write('x = {}, y = {}, rule = b3/s23\n'.format(max_x - min_x + 1, max_y - min_y + 1))
             cells = self.getLiveCells()
             last_sym = ''
