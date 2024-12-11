@@ -242,6 +242,16 @@ class SettingsDialog ( wx.Dialog ):
         self.m_textCtrl_similarity = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
         fgSizer1.Add( self.m_textCtrl_similarity, 0, wx.ALL, 5 )
 
+        self.m_staticText8 = wx.StaticText( self, wx.ID_ANY, _(u"Save Format"), wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.m_staticText8.Wrap( -1 )
+
+        fgSizer1.Add( self.m_staticText8, 0, wx.ALL, 5 )
+
+        m_combo_saveformatChoices = [ _(u"Life"), _(u"RLE"), _(u"Cells") ]
+        self.m_combo_saveformat = wx.ComboBox( self, wx.ID_ANY, _(u"Life"), wx.DefaultPosition, wx.DefaultSize, m_combo_saveformatChoices, 0 )
+        self.m_combo_saveformat.SetSelection( 0 )
+        fgSizer1.Add( self.m_combo_saveformat, 0, wx.ALL, 5 )
+
         self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
         self.m_staticText5.Wrap( -1 )
 

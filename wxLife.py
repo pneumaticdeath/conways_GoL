@@ -31,6 +31,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self._edit_brush = wx.Brush('yellow')
         self._directory = 'examples'
         self._filename = ''
+        self._save_format = life.FMT_LIFE
         self._timer = wx.Timer()
         self.initializeGame(set())
         self.m_grid.Bind(wx.EVT_LEFT_DOWN, self.OnLeftClick)
@@ -188,32 +189,20 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def OnSave(self, event):
         self.PauseSim()
+        ext = ''
+        if self._save_format == life.FMT_CELLS:
+            ext = '.cells'
+        elif self._save_format == life.FMT_RLE:
+            ext = '.rle'
+        elif self._save_format == life.FMT_LIFE:
+            ext = '.life'
         save_dialog = wx.FileDialog(self, "Save state", self._directory, '',
-                                    '*.life', wx.FD_SAVE)
+                                    f'*{ext}', wx.FD_SAVE)
         if save_dialog.ShowModal() == wx.ID_OK:
             save_filename = save_dialog.GetFilename()
-            if not save_filename.endswith('.life'):
-                save_filename += '.life'
             self._directory = save_dialog.GetDirectory()
-            with open(os.path.join(self._directory, save_filename), 'w') as f:
-                self.saveLifeFile(f)
+            self._game.save(os.path.join(self._directory, save_filename), self._save_format)
         save_dialog.Destroy()
-
-    def saveLifeFile(self, out):
-        min_x, min_y, max_x, max_y = self._game.getBoundingBox()
-        if self._filename:
-            out.write('# Loaded from "{}"\n'.format(self._filename))
-        else:
-            out.write('# Height: {}   Width: {}   Fill: {}\n'
-                      .format(self._board_size[1], self._board_size[0], self._fill_factor))
-        out.write('# Generation: {}\n'.format(self._game.getGeneration()))
-        out.write('# Bounding box: ({}, {}) -> ({}, {})\n'.format(min_x, min_y, max_x, max_y))
-        cells = self._game.getLiveCells()
-        if min_y is not None:
-            for y in range(min_y, max_y + 1):
-                for x in range(min_x, max_x + 1):
-                    out.write('*' if (x, y) in cells else ' ')
-                out.write('\n')
 
     def OnLeftClick(self, event):
         if self.m_sim_edit.IsChecked():
@@ -407,6 +396,12 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             self.SetFillFactor(parent._fill_factor)
             self.SetStagnationWindow(parent._stagnation_window)
             self.SetSimilarityThreshold(parent._similarity_threshold)
+            save_format = "RLE"
+            if parent._save_format == life.FMT_LIFE:
+                save_format = "Life"
+            elif parent._save_format == life.FMT_CELLS:
+                save_format = "Cells"
+            self.SetSaveFormat(save_format)
 
     def SetBoardSize(self, size):
         self._board_size = size
@@ -437,6 +432,24 @@ class SettingDialog(wxLifeUI.SettingsDialog):
     def GetSimilarityThreshold(self):
         return self._similarity_threshold
 
+    def SetSaveFormat(self, format):
+        num = self.m_combo_saveformat.GetCount()
+        found = False
+        for f in range(num):
+            if format == self.m_combo_saveformat.GetString(f):
+                self.m_combo_saveformat.SetSelection(f)
+                found = True
+                break
+        if not found:
+            raise ValueError(f'Unknown format {format}')
+
+    def GetSaveFormat(self):
+        selected = self.m_combo_saveformat.GetSelection()
+        if selected == wx.NOT_FOUND:
+            return "UNKNOWN"
+        else:
+            return self.m_combo_saveformat.GetString(selected)
+
     def OnSave(self, event):
         event.Skip()
         try:
@@ -445,6 +458,7 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             fill = int(self.m_textCtrl_fill.GetValue())
             window = int(self.m_textCtrl_stagnation.GetValue())
             threshold = float(self.m_textCtrl_similarity.GetValue())
+            format = self.GetSaveFormat()
 
         except Exception:
             self.setStatus('Unable to parse values, please use numbers')
@@ -459,6 +473,8 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             self.setStatus('Stagnation window cannot be negative')
         elif threshold < 0 or threshold > 1:
             self.setStatus('Similarity threshold must be between 0 and 1')
+        elif format not in ['Life', 'RLE', 'Cells']:
+            self.setStatus('Please choose a save format')
         else:
             self._board_size = (width, height)
             self._fill_factor = fill
@@ -470,6 +486,14 @@ class SettingDialog(wxLifeUI.SettingsDialog):
                 self.GetParent()._fill_factor = self.GetFillFactor()
                 self.GetParent()._stagnation_window = self.GetStagnationWindow()
                 self.GetParent()._similarity_threshold = self.GetSimilarityThreshold()
+                fmtId = wx.NOT_FOUND
+                if format == 'RLE':
+                    fmtId = life.FMT_RLE
+                elif format == 'Life':
+                    fmtId = life.FMT_LIFE
+                else:
+                    fmtId = life.FMT_CELLS
+                self.GetParent()._save_format = fmtId
             self.EndModal(wx.ID_OK)
 
     def setStatus(self, text):
