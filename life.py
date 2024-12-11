@@ -3,6 +3,10 @@
 import re
 import sys
 
+FMT_LIFE = 1
+FMT_CELLS = 2
+FMT_RLE = 3
+
 
 class Life(object):
     def __init__(self, live_cells=None):
@@ -15,6 +19,22 @@ class Life(object):
         self._history = []
         self._meta = {}
         self._gen_counter = 0
+
+    def setMetaData(self, key, value):
+        self._meta[key] = value
+
+    def clearMetaData(self, key=None):
+        if key is None:
+            self._meta = {}
+        else:
+            if key in self._meta:
+                del self._meta[key]
+
+    def getMetaData(self, key=None, default=None):
+        if key is not None:
+            return self._meta.get(key, default)
+        else:
+            return self._meta
 
     def addLiveCells(self, cells):
         for cell in cells:
@@ -209,6 +229,138 @@ class Life(object):
         self._meta['width'] = size_x
         self._meta['height'] = size_y
         self._live = newCells
+
+    def save(self, filename, format=FMT_LIFE):
+        if format == FMT_LIFE:
+            return self.saveLifeFile(filename)
+        elif format == FMT_CELLS:
+            return self.saveCellsFile(filename)
+        elif format == FMT_RLE:
+            return self.saveRLEFile(filename)
+        else:
+            return False
+
+    def saveLifeFile(self, filename):
+        min_x, min_y, max_x, max_y = self.getBoundingBox()
+        if not filename.endswith('.life') and not filename.endswith('.life.txt'):
+            filename += '.life.txt'
+        with open(filename, 'w') as f:
+            if 'headers' in self._meta:
+                for header in self._meta['headers']:
+                    if header.startswith('#'):
+                        f.write(header)
+                    else:
+                        f.write('#')
+                        f.write(header[1:])
+                    if not header.endswith('\n'):
+                        f.write('\n')
+
+            if 'filename' in self._meta:
+                f.write(f'# Loaded from "{self._meta['filename']}"\n')
+            if 'height' in self._meta and 'width' in self._meta:
+                f.write(f'# Height: {self._meta['height']}   Width: {self._meta['width']}')
+                if 'fill' in self._meta:
+                    f.write(f'   Fill: {self._meta['fill']}')
+                f.write('\n')
+            f.write(f'# Generation {self.getGeneration()}\n')
+            f.write(f'# Bounding Box ({min_x}, {min_y}) -> ({max_x}, {max_y})\n')
+            cells = self.getLiveCells()
+            if min_y is not None:
+                for y in range(min_y, max_y + 1):
+                    for x in range(min_x, max_x + 1):
+                        f.write('*' if (x, y) in cells else ' ')
+                    f.write('\n')
+        return True
+
+    def saveCellsFile(self, filename):
+        min_x, min_y, max_x, max_y = self.getBoundingBox()
+        if not filename.endswith('.cells') and not filename.endswith('.cells.txt'):
+            filename += '.cells.txt'
+        with open(filename, 'w') as f:
+            if 'filename' in self._meta:
+                f.write(f'! {self._meta['filename']}\n')
+            if 'author' in self._meta:
+                f.write(f'! \'{self._meta['author']}\'\n')
+            if 'headers' in self._meta:
+                for header in self._meta['headers']:
+                    if header.startswith('!'):
+                        f.write(header)
+                    else:
+                        f.write('!')
+                        f.write(header[1:])
+                    if not header.endswith('\n'):
+                        f.write('\n')
+            cells = self.getLiveCells()
+            if min_y is not None:
+                for y in range(min_y, max_y + 1):
+                    for x in range(min_x, max_x + 1):
+                        f.write('O' if (x, y) in cells else '.')
+                    f.write('\n')
+        return True
+
+    def saveRLEFile(self, filename, max_line_length=80):
+        min_x, min_y, max_x, max_y = self.getBoundingBox()
+        if not filename.endswith('.rle') and not filename.endswith('.rle.txt'):
+            filename += '.rle.txt'
+        with open(filename, 'w') as f:
+            if 'headers' in self._meta:
+                for header in self._meta['headers']:
+                    if header.startswith('#'):
+                        f.write(header)
+                    else:
+                        f.write('#C')
+                        f.write(header[1:])
+                    if not header.endswith('\n'):
+                        f.write('\n')
+            f.write('x = {}, y = {}, rule = b3/s23\n'.format(max_x - min_x + 1, max_y - min_y + 1))
+            cells = self.getLiveCells()
+            last_sym = ''
+            sym_count = 0
+            syms_rle = []
+            for y in range(min_y, max_y + 1):
+                for x in range(min_x, max_x + 1):
+                    sym = 'o' if (x, y) in cells else 'b'
+                    if sym == last_sym:
+                        sym_count += 1
+                    else:
+                        if sym_count > 0:
+                            syms_rle.append((last_sym, sym_count))
+                        last_sym = sym
+                        sym_count = 1
+                if last_sym == '$':
+                    sym_count += 1
+                else:
+                    if last_sym == 'o':
+                        syms_rle.append((last_sym, sym_count))
+                    last_sym = '$'
+                    sym_count = 1
+            if sym_count > 0:
+                if last_sym != '$':
+                    syms_rle.append((last_sym, sym_count))
+                syms_rle.append(('!', 1))
+            print(syms_rle)
+            line = ''
+            for sym, sym_count in syms_rle:
+                if sym_count > 1:
+                    new_blob = f'{sym_count}{sym}'
+                else:
+                    new_blob = sym
+                if len(line) + len(new_blob) > max_line_length:
+                    f.write(line)
+                    f.write('\n')
+                    line = new_blob
+                else:
+                    line += new_blob
+            if line:
+                f.write(line)
+                f.write('\n')
+        return True
+
+
+def load(filename):
+    game = Life()
+    game.load(filename)
+    return game
 
 
 if __name__ == '__main__':
