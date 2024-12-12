@@ -94,6 +94,9 @@ class MainWindow ( wx.Frame ):
         self.m_zoom_out = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"Out\tCtrl+<"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_zoom_menu.Append( self.m_zoom_out )
 
+        self.m_zoom_reframe = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"Reframe"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_zoom_menu.Append( self.m_zoom_reframe )
+
         self.m_menubar4.Append( self.m_zoom_menu, _(u"Zoom") )
 
         self.SetMenuBar( self.m_menubar4 )
@@ -129,6 +132,7 @@ class MainWindow ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.ToggleZoomAuto, id = self.m_zoom_auto.GetId() )
         self.Bind( wx.EVT_MENU, self.ZoomIn, id = self.m_zoom_in.GetId() )
         self.Bind( wx.EVT_MENU, self.ZoomOut, id = self.m_zoom_out.GetId() )
+        self.Bind( wx.EVT_MENU, self.OnReframe, id = self.m_zoom_reframe.GetId() )
 
     def __del__( self ):
         pass
@@ -184,6 +188,9 @@ class MainWindow ( wx.Frame ):
         event.Skip()
 
     def ZoomOut( self, event ):
+        event.Skip()
+
+    def OnReframe( self, event ):
         event.Skip()
 
 
