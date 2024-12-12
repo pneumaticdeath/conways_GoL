@@ -47,12 +47,8 @@ class MainWindow ( wx.Frame ):
         self.m_menubar4.Append( self.m_file_menu, _(u"File") )
 
         self.m_sim_menu = wx.Menu()
-        self.m_sim_run = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Run\tCtrl+R"), wx.EmptyString, wx.ITEM_NORMAL )
-        self.m_sim_menu.Append( self.m_sim_run )
-
-        self.m_sim_pause = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Pause\tCtrl+P"), wx.EmptyString, wx.ITEM_NORMAL )
-        self.m_sim_menu.Append( self.m_sim_pause )
-        self.m_sim_pause.Enable( False )
+        self.m_sim_play_pause = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Run\tCtrl+P"), wx.EmptyString, wx.ITEM_CHECK )
+        self.m_sim_menu.Append( self.m_sim_play_pause )
 
         self.m_sim_step = wx.MenuItem( self.m_sim_menu, wx.ID_ANY, _(u"Single Step\tCtrl+N"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_sim_menu.Append( self.m_sim_step )
@@ -119,8 +115,7 @@ class MainWindow ( wx.Frame ):
         self.Bind( wx.EVT_MENU, self.OnSave, id = self.m_file_save.GetId() )
         self.Bind( wx.EVT_MENU, self.OnSettings, id = self.m_file_settings.GetId() )
         self.Bind( wx.EVT_MENU, self.OnClose, id = self.m_file_quit.GetId() )
-        self.Bind( wx.EVT_MENU, self.RunSim, id = self.m_sim_run.GetId() )
-        self.Bind( wx.EVT_MENU, self.PauseSim, id = self.m_sim_pause.GetId() )
+        self.Bind( wx.EVT_MENU, self.OnPlayPause, id = self.m_sim_play_pause.GetId() )
         self.Bind( wx.EVT_MENU, self.TakeSingleStep, id = self.m_sim_step.GetId() )
         self.Bind( wx.EVT_MENU, self.StepBack, id = self.m_sim_back.GetId() )
         self.Bind( wx.EVT_MENU, self.RandomFill, id = self.m_sim_random_fill.GetId() )
@@ -151,10 +146,7 @@ class MainWindow ( wx.Frame ):
     def OnClose( self, event ):
         event.Skip()
 
-    def RunSim( self, event ):
-        event.Skip()
-
-    def PauseSim( self, event ):
+    def OnPlayPause( self, event ):
         event.Skip()
 
     def TakeSingleStep( self, event ):

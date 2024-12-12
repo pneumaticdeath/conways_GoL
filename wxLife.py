@@ -80,21 +80,25 @@ class MainWindow(wxLifeUI.MainWindow):
         self.Refresh()
         event.Skip()
 
-    def RunSim(self, event=None):
+    def OnPlayPause(self, event):
+        if self._paused:
+            self.RunSim()
+        else:
+            self.PauseSim()
+
+    def RunSim(self):
         self._paused = False
         self.editMode(False)
         if self._stagnated:
             self.clearStagnation()
         self._timer.Start(int(self._delay_time_ms))
-        self.m_sim_run.Enable(False)
-        self.m_sim_pause.Enable(True)
+        self.m_sim_play_pause.Check(True)
         self.Refresh()
 
-    def PauseSim(self, event=None):
+    def PauseSim(self):
         self._paused = True
         self._timer.Stop()
-        self.m_sim_run.Enable(True)
-        self.m_sim_pause.Enable(False)
+        self.m_sim_play_pause.Check(False)
         self.Refresh()
 
     def OnTimer(self, event):
