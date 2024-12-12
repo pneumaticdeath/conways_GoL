@@ -339,7 +339,7 @@
             <property name="help"></property>
             <property name="id">wxID_ANY</property>
             <property name="kind">wxITEM_NORMAL</property>
-            <property name="label">Reframe</property>
+            <property name="label">Reframe	Ctrl+R</property>
             <property name="name">m_zoom_reframe</property>
             <property name="permission">none</property>
             <property name="shortcut"></property>

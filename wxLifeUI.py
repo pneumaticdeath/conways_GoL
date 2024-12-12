@@ -90,7 +90,7 @@ class MainWindow ( wx.Frame ):
         self.m_zoom_out = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"Out\tCtrl+<"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_zoom_menu.Append( self.m_zoom_out )
 
-        self.m_zoom_reframe = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"Reframe"), wx.EmptyString, wx.ITEM_NORMAL )
+        self.m_zoom_reframe = wx.MenuItem( self.m_zoom_menu, wx.ID_ANY, _(u"Reframe\tCtrl+R"), wx.EmptyString, wx.ITEM_NORMAL )
         self.m_zoom_menu.Append( self.m_zoom_reframe )
 
         self.m_menubar4.Append( self.m_zoom_menu, _(u"Zoom") )
