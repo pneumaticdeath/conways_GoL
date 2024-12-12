@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import re
 import sys
 
@@ -146,7 +147,7 @@ class Life(object):
             x = 0
             for c in line:
                 if c == "#":
-                    headers.append(line)
+                    self.addComment(line[x + 1:])
                     break
                 elif not c.isspace():
                     newCells.add((x, y))
@@ -163,9 +164,16 @@ class Life(object):
         newCells = set()
         headers = []
         y = 0
+        line_number = 0
         for line in lines:
+            line_number += 1
             if line.startswith('!'):
-                headers.append(line)
+                if line_number == 1:
+                    self._meta['description'] = line[1:]
+                elif line_number == 2:
+                    self._meta['author'] = line[1:]
+                else:
+                    self.addComment(line[1:])
                 continue
             x = 0
             for c in line:
@@ -275,8 +283,16 @@ class Life(object):
         if not filename.endswith('.life') and not filename.endswith('.life.txt'):
             filename += '.life.txt'
         with open(filename, 'w') as f:
+            if 'description' in self._meta:
+                f.write(f'# {self._meta['description']}')
+                if not self._meta['description'].endswith('\n'):
+                    f.write('\n')
+            if 'author' in self._meta:
+                f.write(f'# Author: {self._meta['author']}')
+                if not self._meta['author'].endswith('\n'):
+                    f.write('\n')
             if 'filename' in self._meta:
-                f.write(f'# Loaded from "{self._meta['filename']}"\n')
+                f.write(f'# Loaded from "{os.path.basename(self._meta['filename'])}"\n')
             elif 'height' in self._meta and 'width' in self._meta:
                 f.write(f'# Height: {self._meta['height']}   Width: {self._meta['width']}')
                 if 'fill' in self._meta:
@@ -293,7 +309,6 @@ class Life(object):
                         f.write(comment[1:])
                     else:
                         f.write(comment)
-
                 if not comment.endswith('\n'):
                     f.write('\n')
 
@@ -310,10 +325,16 @@ class Life(object):
         if not filename.endswith('.cells') and not filename.endswith('.cells.txt'):
             filename += '.cells.txt'
         with open(filename, 'w') as f:
-            if 'filename' in self._meta:
-                f.write(f'! {self._meta['filename']}\n')
+            if 'description' in self._meta:
+                f.write(f'!{self._meta['description']}')
+                if not self._meta['author'].endswith('\n'):
+                    f.write('\n')
             if 'author' in self._meta:
-                f.write(f'! \'{self._meta['author']}\'\n')
+                f.write(f'!{self._meta['author']}')
+                if not self._meta['author'].endswith('\n'):
+                    f.write('\n')
+            if 'filename' in self._meta:
+                f.write(f'! {os.path.basename(self._meta['filename'])}\n')
             for comment in self.getComments():
                 if comment.startswith('!'):
                     f.write(comment)
@@ -364,7 +385,7 @@ class Life(object):
                 if not comment.endswith('\n'):
                     f.write('\n')
             if 'filename' in self._meta:
-                f.write(f'#C originally loaded from {self._meta['filename']}\n')
+                f.write(f'#C originally loaded from {os.path.basename(self._meta['filename'])}\n')
             f.write('x = {}, y = {}, rule = b3/s23\n'.format(max_x - min_x + 1, max_y - min_y + 1))
             cells = self.getLiveCells()
             last_sym = ''
