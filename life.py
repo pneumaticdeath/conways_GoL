@@ -487,13 +487,18 @@ if __name__ == '__main__':
             print('|{}|'.format(line))
         print('+{}+'.format('-' * (2 * (max_x - min_x) + 1)))
 
-    while life.getLiveCells() and life.getLiveCells() not in life.getHistory():
-        print('Generation {}'.format(life.getGeneration()))
-        display(life)
-        life.step()
-        time.sleep(args.delay)
-    if life.getLiveCells():
-        print('Stagnated at generation {}'.format(life.getGeneration()))
-        display(life)
-    else:
-        print('Extinct at generation {}'.format(life.getGeneration()))
+    try:
+        while life.getLiveCells() and life.getLiveCells() not in life.getHistory():
+            print('Generation {}'.format(life.getGeneration()))
+            display(life)
+            life.step()
+            time.sleep(args.delay)
+        if life.getLiveCells():
+            print('Stagnated at generation {}'.format(life.getGeneration()))
+            display(life)
+        else:
+            print('Extinct at generation {}'.format(life.getGeneration()))
+    except KeyboardInterrupt:
+        print('Interrupted at gneeration {}'.format(life.getGeneration()))
+        if life.getLiveCells():
+            display(life)
