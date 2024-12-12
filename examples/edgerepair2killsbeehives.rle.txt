@@ -1,0 +1,7 @@
+#N edgerepair2killsbeehives.rle
+#C https://conwaylife.com/wiki/Edge-repair_spaceship_2
+#C https://www.conwaylife.com/patterns/edgerepair2killsbeehives.rle
+x = 27, y = 18, rule = B3/S23
+b2o$o2bo$b2o2$5bobo$5bo$5bobo2bo2bo$8bo$9bob2obo$10b3obo$9bo4bo2bob2o$
+6bo3b2o3bob4o$6b2o2bo2bob2o4bo4bo$6bo8b2o4bo2b3o$11b2o3b2o3bo2b2o$b2o$
+o2bo$b2o!
