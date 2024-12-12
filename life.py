@@ -327,7 +327,7 @@ class Life(object):
         with open(filename, 'w') as f:
             if 'description' in self._meta:
                 f.write(f'!{self._meta['description']}')
-                if not self._meta['author'].endswith('\n'):
+                if not self._meta['description'].endswith('\n'):
                     f.write('\n')
             if 'author' in self._meta:
                 f.write(f'!{self._meta['author']}')
