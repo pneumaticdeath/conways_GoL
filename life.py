@@ -487,12 +487,13 @@ if __name__ == '__main__':
             print('|{}|'.format(line))
         print('+{}+'.format('-' * (2 * (max_x - min_x) + 1)))
 
-    cells = life.getLiveCells()
-    last_gen = set()
-    while cells and cells != last_gen:
+    while life.getLiveCells() and life.getLiveCells() not in life.getHistory():
         print('Generation {}'.format(life.getGeneration()))
         display(life)
         life.step()
-        last_gen = cells
-        cells = life.getLiveCells()
         time.sleep(args.delay)
+    if life.getLiveCells():
+        print('Stagnated at generation {}'.format(life.getGeneration()))
+        display(life)
+    else:
+        print('Extinct at generation {}'.format(life.getGeneration()))
