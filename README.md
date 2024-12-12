@@ -14,48 +14,9 @@ shown that the game of life is actually turing complete, that is, it can
 be used to construct a traditional computer.
 
 The three versions I have are:
-* life.py     -- a strictly text based command line implemntation
-* pyg_life.py -- an implenation using the _pygame_ SDL graphics library
-* wxLife.py   -- a full GUI application built using _wxPython_
+- [life.py](README-life.md)     -- a strictly text based command line implemntation
+- [pyg_life.py](README-pyg_life.md) -- an implenation using the **pygame** SDL graphics library
+- wxLife.py   -- a full GUI application built using **wxPython**
 
 All three should run on Windows, MacOS and Linux, though I haven't tested 
 them on Windows myself.
-
-For the pygame version (pyg_life.py) there are the following command line options:
-```
-usage: ./pyg_life.py [-h] [--width WIDTH] [--height HEIGHT] [--fill FILL] [--load LOAD] [--window WINDOW] [--fullscreen]
-                     [--paused] [--delay DELAY] [--stagnation STAGNATION] [--similarity-threshold SIMILARITY_THRESHOLD]
-                     [--random-seed RANDOM_SEED]
-
-options:
-  -h, --help            show this help message and exit
-  --width WIDTH         Initial width of game
-  --height HEIGHT       Initial height of game
-  --fill FILL           Percentage fill of initial field
-  --load LOAD           Optional file for initial pattern
-  --window WINDOW       Dimensions of window
-  --fullscreen          Display in full screen
-  --paused              Start the game paused
-  --delay DELAY         Delay in seconds between generation updates
-  --stagnation STAGNATION
-                        Stop if stagnated for this many generations
-  --similarity-threshold SIMILARITY_THRESHOLD
-  --random-seed RANDOM_SEED
-                        Seed the random number generator
-```
-
-And in the game you can use the following keys to control the display:
-
-* P - Toggle whether the game is paused
-* Z - Toggle auto-zoom
-* C - Continue after stagnation pause
-* I - Zoom in
-* O - Zoom out
-* B - Step backwards in time
-* F - Run faster
-* S - Run Slower
-* D - Dump current pattern to save file
-* Q - Quit game
-* SPACE - Take a single step
-* RETURN - toggle full screen display
-* Arrow Keys - Scroll around the playfield
