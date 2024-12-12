@@ -15,7 +15,6 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def __init__(self, parent):
         wxLifeUI.MainWindow.__init__(self, parent)
-        self._paused = True
         self._board_size = (20, 20)
         self._fill_factor = 40
         self._delay_time_ms = 100
@@ -59,10 +58,10 @@ class MainWindow(wxLifeUI.MainWindow):
             return self._edit_brush
         elif self._stagnated:
             return self._stagnated_brush
-        elif self._paused:
-            return self._paused_brush
-        else:
+        elif self.m_sim_play_pause.IsChecked():
             return self._running_brush
+        else:
+            return self._paused_brush
 
     def RandomFill(self, event):
         self.clearStagnation()
@@ -81,13 +80,12 @@ class MainWindow(wxLifeUI.MainWindow):
         event.Skip()
 
     def OnPlayPause(self, event):
-        if self._paused:
+        if self.m_sim_play_pause.IsChecked():
             self.RunSim()
         else:
             self.PauseSim()
 
     def RunSim(self):
-        self._paused = False
         self.editMode(False)
         if self._stagnated:
             self.clearStagnation()
@@ -96,7 +94,6 @@ class MainWindow(wxLifeUI.MainWindow):
         self.Refresh()
 
     def PauseSim(self):
-        self._paused = True
         self._timer.Stop()
         self.m_sim_play_pause.Check(False)
         self.Refresh()
@@ -353,10 +350,10 @@ class MainWindow(wxLifeUI.MainWindow):
         if keycode == wx.WXK_RETURN or keycode == wx.WXK_MEDIA_NEXT_TRACK:
             self.TakeSingleStep(event)
         elif keycode == wx.WXK_MEDIA_PLAY_PAUSE:
-            if self._paused:
-                self.RunSim(event)
+            if self.m_sim_play_pause.IsChecked():
+                self.PauseSim()
             else:
-                self.PauseSim(event)
+                self.RunSim()
         elif keycode == wx.WXK_MEDIA_PREV_TRACK:
             self.StepBack(event)
         elif keycode == wx.WXK_LEFT:
@@ -379,15 +376,15 @@ class MainWindow(wxLifeUI.MainWindow):
             return min_v - amount, max_v - amount
 
     def OnSettings(self, event):
-        wasPaused = self._paused
-        if not self._paused:
+        wasRunning = self.m_sim_play_pause.IsChecked()
+        if self.m_sim_play_pause.IsChecked():
             self.PauseSim()
 
         dialog = SettingDialog(self)
         if dialog.ShowModal() == wx.ID_OK:
             self.setStatus("Saving settings")
 
-        if not wasPaused:
+        if wasRunning:
             self.RunSim()
 
     def setStatus(self, text):
