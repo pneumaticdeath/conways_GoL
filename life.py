@@ -284,19 +284,25 @@ class Life(object):
             filename += '.life.txt'
         with open(filename, 'w') as f:
             if 'description' in self._meta:
-                f.write(f'# {self._meta['description']}')
-                if not self._meta['description'].endswith('\n'):
+                description = self._meta['description']
+                f.write(f'# {description}')
+                if not description.endswith('\n'):
                     f.write('\n')
             if 'author' in self._meta:
-                f.write(f'# Author: {self._meta['author']}')
-                if not self._meta['author'].endswith('\n'):
+                author = self._meta['author']
+                f.write(f'# Author: {author}')
+                if not author.endswith('\n'):
                     f.write('\n')
             if 'filename' in self._meta:
-                f.write(f'# Loaded from "{os.path.basename(self._meta['filename'])}"\n')
+                orig_filename = self._meta['filename']
+                f.write(f'# Loaded from "{os.path.basename(orig_filename)}"\n')
             elif 'height' in self._meta and 'width' in self._meta:
-                f.write(f'# Height: {self._meta['height']}   Width: {self._meta['width']}')
+                orig_height = self._meta['height']
+                orig_width = self._meta['width']
+                f.write(f'# Height: {orig_height}   Width: {orig_width}')
                 if 'fill' in self._meta:
-                    f.write(f'   Fill: {self._meta['fill']}')
+                    fill = self._meta['fill']
+                    f.write(f'   Fill: {fill}')
                 f.write('\n')
             f.write(f'# Generation {self.getGeneration()}\n')
             f.write(f'# Bounding Box ({min_x}, {min_y}) -> ({max_x}, {max_y})\n')
@@ -326,15 +332,18 @@ class Life(object):
             filename += '.cells.txt'
         with open(filename, 'w') as f:
             if 'description' in self._meta:
-                f.write(f'!{self._meta['description']}')
-                if not self._meta['description'].endswith('\n'):
+                description = self._meta['description']
+                f.write(f'!{description}')
+                if not description.endswith('\n'):
                     f.write('\n')
             if 'author' in self._meta:
-                f.write(f'!{self._meta['author']}')
-                if not self._meta['author'].endswith('\n'):
+                author = self._meta['author']
+                f.write(f'!{author}')
+                if not author.endswith('\n'):
                     f.write('\n')
             if 'filename' in self._meta:
-                f.write(f'! {os.path.basename(self._meta['filename'])}\n')
+                orig_filename = self._meta['filename']
+                f.write(f'! {os.path.basename(orig_filename)}\n')
             for comment in self.getComments():
                 if comment.startswith('!'):
                     f.write(comment)
@@ -363,15 +372,17 @@ class Life(object):
                 if self._meta['description'].startswith('#N'):
                     f.write(self._meta['description'])
                 else:
-                    f.write(f'#N{self._meta['description']}')
-                if not self._meta['description'].endswith('\n'):
+                    description = self._meta['description']
+                    f.write(f'#N{description}')
+                if not description.endswith('\n'):
                     f.write('\n')
             if 'author' in self._meta:
-                if self._meta['author'].startswith('#O'):
-                    f.write(self._meta['author'])
+                author = self._meta['author']
+                if author.startswith('#O'):
+                    f.write(author)
                 else:
-                    f.write(f'#O{self._meta['author']}')
-                if not self._meta['author'].endswith('\n'):
+                    f.write(f'#O{author}')
+                if not author.endswith('\n'):
                     f.write('\n')
             for comment in self.getComments():
                 if comment.startswith('#C'):
@@ -385,7 +396,8 @@ class Life(object):
                 if not comment.endswith('\n'):
                     f.write('\n')
             if 'filename' in self._meta:
-                f.write(f'#C originally loaded from {os.path.basename(self._meta['filename'])}\n')
+                orig_filename = self._meta['filename']
+                f.write(f'#C originally loaded from {os.path.basename(orig_filename)}\n')
             f.write('x = {}, y = {}, rule = b3/s23\n'.format(max_x - min_x + 1, max_y - min_y + 1))
             cells = self.getLiveCells()
             last_sym = ''
