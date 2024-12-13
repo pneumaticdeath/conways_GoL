@@ -314,8 +314,7 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def OnReframe(self, event):
         event.Skip()
-        self._box_min_x, self._box_min_y, self._box_max_x, self._box_max_y = self._game.getBoundingBox()
-        self.Refresh()
+        self.resetDisplayBox()
 
     def ToggleStagnation(self, event):
         # The checked flag has already been toggled at this point
