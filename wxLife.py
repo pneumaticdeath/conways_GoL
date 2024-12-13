@@ -4,6 +4,7 @@ import life
 import math
 import os
 import random
+import time
 import wx
 import wxLifeUI
 
@@ -23,6 +24,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self._stagnation = 0
         self._stagnation_window = 10
         self._similarity_threshold = 0.95
+        self._last_step_time = 0
         self._background = wx.Brush('black')
         self._paused_brush = wx.Brush(wx.Colour(31, 31, 255))
         self._running_brush = wx.Brush('green')
@@ -106,7 +108,10 @@ class MainWindow(wxLifeUI.MainWindow):
         self.takeStep()
 
     def takeStep(self):
+        time_before = time.time()
         self._game.step()
+        time_after = time.time()
+        self._last_step_time = time_after - time_before
         if self.m_zoom_auto.IsChecked():
             self.AutoZoom()
         self.checkStagnation()
@@ -227,14 +232,16 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def OnPaint(self, event):
         if self._filename:
-            self.SetTitle('"{}"  Generation: {}   Cells: {}'
+            self.SetTitle('"{}"  Generation: {}   Cells: {}  Last step time: {} ms'
                           .format(self._filename,
                                   self._game.getGeneration(),
-                                  len(self._game.getLiveCells())))
+                                  len(self._game.getLiveCells()),
+                                  int(self._last_step_time * 1000 + 0.5)))
         else:
-            self.SetTitle('Generation: {}   Cells: {}'
+            self.SetTitle('Generation: {}   Cells: {}  Last step time {} ms'
                           .format(self._game.getGeneration(),
-                                  len(self._game.getLiveCells())))
+                                  len(self._game.getLiveCells()),
+                                  int(self._last_step_time * 1000 + 0.5)))
         dc = wx.PaintDC(self.m_grid)
         dc.SetBackground(self._background)
         dc.SetBrush(self.getBrush())
