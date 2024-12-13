@@ -1,0 +1,6 @@
+#N blockongriddle.rle
+#O Robert Wainwright, 1972
+#C https://conwaylife.com/wiki/Block_on_griddle
+#C https://www.conwaylife.com/patterns/blockongriddle.rle
+x = 6, y = 7, rule = B3/S23
+3bo$bobo$o4bo$6o2$2b2o$2b2o!

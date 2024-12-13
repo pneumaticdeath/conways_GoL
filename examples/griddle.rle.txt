@@ -1,0 +1,5 @@
+#N griddle.rle
+#C https://conwaylife.com/wiki/Griddle
+#C https://www.conwaylife.com/patterns/griddle.rle
+x = 6, y = 4, rule = B3-i/S23
+6o$o4bo$2bobo$2bo!
