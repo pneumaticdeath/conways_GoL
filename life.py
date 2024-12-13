@@ -10,8 +10,9 @@ FMT_RLE = 3
 
 
 class Life(object):
-    def __init__(self, live_cells=None):
+    def __init__(self, live_cells=None, history_limit=-1):
         self.clear()
+        self._history_limit = history_limit
         if live_cells is not None:
             self.addLiveCells(live_cells)
 
@@ -20,6 +21,9 @@ class Life(object):
         self._history = []
         self._meta = {}
         self._gen_counter = 0
+
+    def setHistoryLimit(self, limit):
+        self._history_limit = limit
 
     def setMetaData(self, key, value):
         self._meta[key] = value
@@ -100,7 +104,11 @@ class Life(object):
                 next_gen.add(cell)
             elif n == 3:
                 next_gen.add(cell)
-        self._history.append(self._live)
+
+        if self._history_limit != 0:
+            self._history.append(self._live)
+        if self._history_limit > 0 and len(self._history) > self._history_limit:
+            self._history = self._history[-self._history_limit:]
         self._live = next_gen
         self._gen_counter += 1
 
