@@ -408,7 +408,7 @@ class Life(object):
                 f.write(f'#C originally loaded from {os.path.basename(orig_filename)}\n')
             if self.getGeneration() > 0:
                 gen = self.getGeneration()
-                f.write(f'#C at generation {gen}\n')
+                f.write(f'#C at generation {gen}  Bounded by ({min_x}, {min_y}) -> ({max_x}, {max_y})\n')
             f.write('x = {}, y = {}, rule = b3/s23\n'.format(max_x - min_x + 1, max_y - min_y + 1))
             cells = self.getLiveCells()
             last_sym = ''
