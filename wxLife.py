@@ -231,17 +231,6 @@ class MainWindow(wxLifeUI.MainWindow):
         event.Skip()
 
     def OnPaint(self, event):
-        if self._filename:
-            self.SetTitle('"{}"  Generation: {}   Cells: {}  Last step time: {} ms'
-                          .format(self._filename,
-                                  self._game.getGeneration(),
-                                  len(self._game.getLiveCells()),
-                                  int(self._last_step_time * 1000 + 0.5)))
-        else:
-            self.SetTitle('Generation: {}   Cells: {}  Last step time {} ms'
-                          .format(self._game.getGeneration(),
-                                  len(self._game.getLiveCells()),
-                                  int(self._last_step_time * 1000 + 0.5)))
         dc = wx.PaintDC(self.m_grid)
         dc.SetBackground(self._background)
         dc.SetBrush(self.getBrush())
@@ -259,6 +248,20 @@ class MainWindow(wxLifeUI.MainWindow):
 
         self._display_mid_x = disp_width / 2
         self._display_mid_y = disp_height / 2
+
+        if self._filename:
+            self.SetTitle('"{}"  Generation: {}   Cells: {}  Last step time: {} ms  Cell size {:.3f} px'
+                          .format(self._filename,
+                                  self._game.getGeneration(),
+                                  len(self._game.getLiveCells()),
+                                  int(self._last_step_time * 1000 + 0.5),
+                                  self._scale))
+        else:
+            self.SetTitle('Generation: {}   Cells: {}  Last step time {} ms  Cell size {:.3f} px'
+                          .format(self._game.getGeneration(),
+                                  len(self._game.getLiveCells()),
+                                  int(self._last_step_time * 1000 + 0.5),
+                                  self._scale))
         pixels = {}
         for cell_x, cell_y in self._game.getLiveCells():
             x = math.floor(self._display_mid_x + self._scale * (cell_x - self._box_mid_x + 0.5))
