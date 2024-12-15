@@ -1,0 +1,8 @@
+#N Whirlpool
+#O Mitch Patenaude mitch@mitchpatenaude.net
+#C A long-lived animation of a swirling pattern
+#C with a false stagnation. Use a stagnation of
+#C 50 or more
+#C November 30, 2024
+x = 11, y = 11, rule = b3/s23
+5b3o$4bo2bo$4bo2bo$6obo$o6b3o$o2bo3bo2bo$b3o6bo$3bob6o$3bo2bo$3bo2bo$3b3o!

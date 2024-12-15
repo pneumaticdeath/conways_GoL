@@ -1,0 +1,7 @@
+#N Swirly 
+#O Mitch Patenaude mitch@mitchpatenaude.net
+#C A swirly pattern that has a false stagnation
+#C early on. Use stagnation of 50 or greater
+#C November 30, 2024
+x = 11, y = 11, rule = b3/s23
+4b3o$4bo2bo$4bo2bo$b4o2bo$o6b4o$o9bo$4o6bo$3bo2b4o$3bo2bo$3bo2bo$4b3o!

@@ -1,0 +1,7 @@
+#N Washing cycle
+#O Mitch Patenaude mitch@mitchpatenaude.net
+#C A cute animation that reminds me of an old-fashioned
+#C washing machine agitation cycle
+#C November 30, 2024
+x = 11, y = 11, rule = b3/s23
+5b2o$4bo2bo$4bo2bo$b3o3bo$o3bobob2o$o9bo$b2obobo3bo$3bo3b3o$3bo2bo$3bo2bo$4b2o!
