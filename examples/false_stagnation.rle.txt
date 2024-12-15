@@ -1,0 +1,10 @@
+#N False Stagnation
+#O Mitch Patenaude mitch@mitchpatenaude.net
+#C This is an example of false stagnation,
+#C where the heuristic assumes stagnation long
+#C before the simulation actually reaches a
+#C steady state.
+#C December 8, 2024
+x = 13, y = 13, rule = b3/s23
+4bobo$3bo3bo$bobobobo$o2bo3bo$bo2bo3bo$o2bo3b2o$b4obob4o$4b2o3bo2bo$4bo3bo2bo$
+5bo3bo2bo$5bobobobo$5bo3bo$6bobo!
