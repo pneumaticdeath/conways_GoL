@@ -413,33 +413,7 @@ class Life(object):
                 gen = self.getGeneration()
                 f.write(f'#C at generation {gen}  Bounded by ({min_x}, {min_y}) -> ({max_x}, {max_y})\n')
             f.write('x = {}, y = {}, rule = b3/s23\n'.format(max_x - min_x + 1, max_y - min_y + 1))
-            cells = self.getLiveCells()
-            last_sym = ''
-            sym_count = 0
-            syms_rle = []
-            for y in range(min_y, max_y + 1):
-                for x in range(min_x, max_x + 1):
-                    sym = 'o' if (x, y) in cells else 'b'
-                    if sym == last_sym:
-                        sym_count += 1
-                    else:
-                        if sym_count > 0:
-                            syms_rle.append((last_sym, sym_count))
-                        last_sym = sym
-                        sym_count = 1
-                if syms_rle and syms_rle[-1][0] == '$' and last_sym == 'b':
-                    syms_rle[-1] = ('$', syms_rle[-1][1] + 1)
-                    sym_count = 0
-                    last_sym = '$'
-                else:
-                    if last_sym == 'o':
-                        syms_rle.append((last_sym, sym_count))
-                    last_sym = '$'
-                    sym_count = 1
-            if sym_count > 0:
-                if last_sym != '$':
-                    syms_rle.append((last_sym, sym_count))
-                syms_rle.append(('!', 1))
+            syms_rle = self.findRLE()
             line = ''
             for sym, sym_count in syms_rle:
                 if sym_count > 1:
@@ -457,11 +431,54 @@ class Life(object):
                 f.write('\n')
         return True
 
+    def findRLE(self):
+        cells = self.getLiveCells()
+        min_x, min_y, max_x, max_y = self.getBoundingBox()
+        last_sym = ''
+        sym_count = 0
+        syms_rle = []
+        for y in range(min_y, max_y + 1):
+            for x in range(min_x, max_x + 1):
+                sym = 'o' if (x, y) in cells else 'b'
+                if sym == last_sym:
+                    sym_count += 1
+                else:
+                    if sym_count > 0:
+                        syms_rle.append((last_sym, sym_count))
+                    last_sym = sym
+                    sym_count = 1
+            if syms_rle and syms_rle[-1][0] == '$' and last_sym == 'b':
+                syms_rle[-1] = ('$', syms_rle[-1][1] + 1)
+                sym_count = 0
+                last_sym = '$'
+            else:
+                if last_sym == 'o':
+                    syms_rle.append((last_sym, sym_count))
+                last_sym = '$'
+                sym_count = 1
+        if sym_count > 0:
+            if last_sym != '$':
+                syms_rle.append((last_sym, sym_count))
+            syms_rle.append(('!', 1))
+        return syms_rle
+
 
 def load(filename):
     game = Life()
     game.load(filename)
     return game
+
+
+def display(game):
+    min_x, min_y, max_x, max_y = game.getBoundingBox()
+
+    print('({}, {}) -> ({}, {})'.format(min_x, min_y, max_x, max_y))
+    print('+{}+'.format('-' * (2 * (max_x - min_x) + 1)))
+    cells = game.getLiveCells()
+    for y in range(min_y, max_y + 1):
+        line = ' '.join(['*' if (x, y) in cells else ' ' for x in range(min_x, max_x + 1)])
+        print('|{}|'.format(line))
+    print('+{}+'.format('-' * (2 * (max_x - min_x) + 1)))
 
 
 if __name__ == '__main__':
@@ -501,17 +518,6 @@ if __name__ == '__main__':
         life.addLiveCells(initial_cells)
     else:
         life.load(args.load)
-
-    def display(game):
-        min_x, min_y, max_x, max_y = game.getBoundingBox()
-
-        print('({}, {}) -> ({}, {})'.format(min_x, min_y, max_x, max_y))
-        print('+{}+'.format('-' * (2 * (max_x - min_x) + 1)))
-        cells = game.getLiveCells()
-        for y in range(min_y, max_y + 1):
-            line = ' '.join(['*' if (x, y) in cells else ' ' for x in range(min_x, max_x + 1)])
-            print('|{}|'.format(line))
-        print('+{}+'.format('-' * (2 * (max_x - min_x) + 1)))
 
     try:
         while life.getLiveCells() and life.getLiveCells() not in life.getHistory():
