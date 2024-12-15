@@ -25,6 +25,9 @@ class Life(object):
     def setHistoryLimit(self, limit):
         self._history_limit = limit
 
+    def getHistoryLimit(self):
+        return self._history_limit
+
     def setMetaData(self, key, value):
         self._meta[key] = value
 

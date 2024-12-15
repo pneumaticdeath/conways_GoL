@@ -411,6 +411,7 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             self.SetFillFactor(parent._fill_factor)
             self.SetStagnationWindow(parent._stagnation_window)
             self.SetSimilarityThreshold(parent._similarity_threshold)
+            self.SetHistorySize(parent._game.getHistoryLimit())
             save_format = "RLE"
             if parent._save_format == life.FMT_LIFE:
                 save_format = "Life"
@@ -447,6 +448,13 @@ class SettingDialog(wxLifeUI.SettingsDialog):
     def GetSimilarityThreshold(self):
         return self._similarity_threshold
 
+    def SetHistorySize(self, size):
+        self._history_size = size
+        self.m_textCtrl_history.SetValue(str(size))
+
+    def GetHistorySize(self):
+        return self._history_size
+
     def SetSaveFormat(self, format):
         num = self.m_combo_saveformat.GetCount()
         found = False
@@ -473,6 +481,7 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             fill = int(self.m_textCtrl_fill.GetValue())
             window = int(self.m_textCtrl_stagnation.GetValue())
             threshold = float(self.m_textCtrl_similarity.GetValue())
+            history = int(self.m_textCtrl_history.GetValue())
             format = self.GetSaveFormat()
 
         except Exception:
@@ -495,12 +504,14 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             self._fill_factor = fill
             self._stagnation_window = window
             self._similarity_threshold = threshold
+            self._history_size = history
 
             if type(self.GetParent()) is MainWindow:
                 self.GetParent()._board_size = self.GetBoardSize()
                 self.GetParent()._fill_factor = self.GetFillFactor()
                 self.GetParent()._stagnation_window = self.GetStagnationWindow()
                 self.GetParent()._similarity_threshold = self.GetSimilarityThreshold()
+                self.GetParent()._game.setHistoryLimit(self.GetHistorySize())
                 fmtId = wx.NOT_FOUND
                 if format == 'RLE':
                     fmtId = life.FMT_RLE
