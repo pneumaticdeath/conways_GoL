@@ -19,6 +19,7 @@ class MainWindow(wxLifeUI.MainWindow):
         self._board_size = (20, 20)
         self._fill_factor = 40
         self._delay_time_ms = 100
+        self._history_limit = -1
         self._single_step = False
         self._stagnated = False
         self._stagnation = 0
@@ -43,7 +44,7 @@ class MainWindow(wxLifeUI.MainWindow):
 
     def initializeGame(self, cells):
         self.clearStagnation()
-        self._game = life.Life(cells)
+        self._game = life.Life(cells, self._history_limit)
         self.resetDisplayBox()
 
     def resetDisplayBox(self):
@@ -64,6 +65,13 @@ class MainWindow(wxLifeUI.MainWindow):
             return self._running_brush
         else:
             return self._paused_brush
+
+    def getHistoryLimit(self):
+        return self._history_limit
+
+    def setHistoryLimit(self, limit):
+        self._history_limit = limit
+        self._game.setHistoryLimit(limit)
 
     def RandomFill(self, event):
         self.clearStagnation()
@@ -411,7 +419,7 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             self.SetFillFactor(parent._fill_factor)
             self.SetStagnationWindow(parent._stagnation_window)
             self.SetSimilarityThreshold(parent._similarity_threshold)
-            self.SetHistorySize(parent._game.getHistoryLimit())
+            self.SetHistoryLimit(parent.getHistoryLimit())
             save_format = "RLE"
             if parent._save_format == life.FMT_LIFE:
                 save_format = "Life"
@@ -448,12 +456,12 @@ class SettingDialog(wxLifeUI.SettingsDialog):
     def GetSimilarityThreshold(self):
         return self._similarity_threshold
 
-    def SetHistorySize(self, size):
-        self._history_size = size
-        self.m_textCtrl_history.SetValue(str(size))
+    def SetHistoryLimit(self, limit):
+        self._history_limit = limit
+        self.m_textCtrl_history.SetValue(str(limit))
 
-    def GetHistorySize(self):
-        return self._history_size
+    def GetHistoryLimit(self):
+        return self._history_limit
 
     def SetSaveFormat(self, format):
         num = self.m_combo_saveformat.GetCount()
@@ -504,14 +512,15 @@ class SettingDialog(wxLifeUI.SettingsDialog):
             self._fill_factor = fill
             self._stagnation_window = window
             self._similarity_threshold = threshold
-            self._history_size = history
+            self._history_limit = history
 
             if type(self.GetParent()) is MainWindow:
                 self.GetParent()._board_size = self.GetBoardSize()
                 self.GetParent()._fill_factor = self.GetFillFactor()
                 self.GetParent()._stagnation_window = self.GetStagnationWindow()
                 self.GetParent()._similarity_threshold = self.GetSimilarityThreshold()
-                self.GetParent()._game.setHistoryLimit(self.GetHistorySize())
+                self.GetParent().setHistoryLimit(self.GetHistoryLimit())
+
                 fmtId = wx.NOT_FOUND
                 if format == 'RLE':
                     fmtId = life.FMT_RLE
