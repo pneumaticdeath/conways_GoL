@@ -97,7 +97,7 @@ class Life(object):
 
     def step(self):
         next_gen = set()
-        cells_of_concern = set(self._live)  # make a copy of current live cells
+        cells_of_concern = self._live.copy()  # make a copy of current live cells
         for cell in self._live:
             for neighbor in self.neighbors(cell):
                 cells_of_concern.add(neighbor)
