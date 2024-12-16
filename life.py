@@ -72,6 +72,17 @@ class Life(object):
             if cell in self._live:
                 self._live.remove(cell)
 
+    def orderedCells(self):
+        min_x, min_y, max_x, max_y = self.getBoundingBox()
+        width = max_x - min_x + 1
+        cells = list(self._live)
+
+        def keyfunc(cell):
+            return (cell[1] - min_y) * width + cell[0] - min_x
+
+        cells.sort(key=keyfunc)
+        return cells
+
     def neighbors(self, cell):
         x, y = cell
         for dy in range(-1, 2):
@@ -432,35 +443,35 @@ class Life(object):
         return True
 
     def findRLE(self):
-        cells = self.getLiveCells()
         min_x, min_y, max_x, max_y = self.getBoundingBox()
-        last_sym = ''
-        sym_count = 0
-        syms_rle = []
-        for y in range(min_y, max_y + 1):
-            for x in range(min_x, max_x + 1):
-                sym = 'o' if (x, y) in cells else 'b'
-                if sym == last_sym:
-                    sym_count += 1
+        sym_rle = []
+        last_y = 0
+        last_x = -1
+        for cell in self.orderedCells():
+            rel_x = cell[0] - min_x
+            rel_y = cell[1] - min_y
+            if rel_y > last_y:
+                sym_rle.append(('$', rel_y - last_y))
+                last_y = rel_y
+                if rel_x > 0:
+                    sym_rle.append(('b', rel_x))
+                sym_rle.append(('o', 1))
+                last_y = rel_y
+                last_x = rel_x
+            elif rel_x == last_x + 1:
+                # It's non-obvious, but if sym_rle has anything
+                # the last symbol will always be 'o'
+                if sym_rle:
+                    sym_rle[-1] = ('o', sym_rle[-1][1] + 1)
                 else:
-                    if sym_count > 0:
-                        syms_rle.append((last_sym, sym_count))
-                    last_sym = sym
-                    sym_count = 1
-            if syms_rle and syms_rle[-1][0] == '$' and last_sym == 'b':
-                syms_rle[-1] = ('$', syms_rle[-1][1] + 1)
-                sym_count = 0
-                last_sym = '$'
+                    sym_rle.append(('o', 1))
+                last_x = rel_x
             else:
-                if last_sym == 'o':
-                    syms_rle.append((last_sym, sym_count))
-                last_sym = '$'
-                sym_count = 1
-        if sym_count > 0:
-            if last_sym != '$':
-                syms_rle.append((last_sym, sym_count))
-            syms_rle.append(('!', 1))
-        return syms_rle
+                sym_rle.append(('b', (rel_x - last_x) - 1))
+                sym_rle.append(('o', 1))
+                last_x = rel_x
+        sym_rle.append(('!', 1))
+        return sym_rle
 
 
 def load(filename):
