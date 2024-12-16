@@ -85,10 +85,8 @@ class Life(object):
 
     def neighbors(self, cell):
         x, y = cell
-        for dy in range(-1, 2):
-            for dx in range(-1, 2):
-                if dx != 0 or dy != 0:
-                    yield (x + dx, y + dy)
+        for dx, dy in [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]:
+            yield (x + dx, y + dy)
 
     def countNeighbors(self, cell):
         count = 0
