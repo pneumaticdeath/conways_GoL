@@ -450,12 +450,10 @@ class Life(object):
             rel_y = cell[1] - min_y
             if rel_y > last_y:
                 sym_rle.append(('$', rel_y - last_y))
-                last_y = rel_y
                 if rel_x > 0:
                     sym_rle.append(('b', rel_x))
                 sym_rle.append(('o', 1))
                 last_y = rel_y
-                last_x = rel_x
             elif rel_x == last_x + 1:
                 # It's non-obvious, but if sym_rle has anything
                 # the last symbol will always be 'o'
@@ -463,11 +461,10 @@ class Life(object):
                     sym_rle[-1] = ('o', sym_rle[-1][1] + 1)
                 else:
                     sym_rle.append(('o', 1))
-                last_x = rel_x
             else:
                 sym_rle.append(('b', (rel_x - last_x) - 1))
                 sym_rle.append(('o', 1))
-                last_x = rel_x
+            last_x = rel_x
         sym_rle.append(('!', 1))
         return sym_rle
 
