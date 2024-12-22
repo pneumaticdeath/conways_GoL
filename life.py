@@ -88,13 +88,6 @@ class Life(object):
         for dx, dy in [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]:
             yield (x + dx, y + dy)
 
-    def countNeighbors(self, cell):
-        count = 0
-        for neighbor in self.neighbors(cell):
-            if neighbor in self._live:
-                count += 1
-        return count
-
     def getLiveCells(self):
         return self._live
 
@@ -106,15 +99,15 @@ class Life(object):
 
     def step(self):
         next_gen = set()
-        cells_of_concern = self._live.copy()  # make a copy of current live cells
+        neighbor_count = {}
         for cell in self._live:
             for neighbor in self.neighbors(cell):
-                cells_of_concern.add(neighbor)
-        for cell in cells_of_concern:
-            n = self.countNeighbors(cell)
-            if cell in self._live and n in [2, 3]:
-                next_gen.add(cell)
-            elif n == 3:
+                if neighbor in neighbor_count:
+                    neighbor_count[neighbor] += 1
+                else:
+                    neighbor_count[neighbor] = 1
+        for cell, count in neighbor_count.items():
+            if count == 3 or count == 2 and cell in self._live:
                 next_gen.add(cell)
 
         if self._history_limit != 0:
