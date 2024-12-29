@@ -1,0 +1,9 @@
+#N lobster.rle
+#O Matthias Merzenich, 2011
+#C https://conwaylife.com/wiki/Lobster_(spaceship)
+#C https://www.conwaylife.com/patterns/lobster.rle
+x = 26, y = 26, rule = B3/S23
+12b3o$12bo$13bo2b2o$16b2o$12b2o$13b2o$12bo2bo2$14bo2bo$14bo3bo$15b3obo
+$20bo$2o2bobo13bo$obob2o13bo$o4bo2b2o13b2o$6bo3bo6b2o2b2o2bo$2b2o6bo6b
+o2bo$2b2o4bobo4b2o$9bo5bo3bo3bo$10bo2bo4b2o$11b2o3bo5bobo$15bo8b2o$15b
+o4bo$14bo3bo$14bo5b2o$15bo5bo!
