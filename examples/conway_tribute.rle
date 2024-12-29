@@ -1,0 +1,5 @@
+#N Conway Tribute
+#C A tribute to John Conway on the occasion of his 
+#C passing
+x = 7, y = 9, rule = b3/s23
+2b3o$2bobo$2bobo$3bo$ob3o$bobobo$3bo2bo$2bobo$2bobo!
